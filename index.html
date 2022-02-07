@@ -1,0 +1,111 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <title>Devious Digitizer</title>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+        <link rel="stylesheet" href="css/main.css" />
+        <noscript><!-- TODO --></noscript>
+
+
+        <script defer src="js/ungap-custom-elements.js"></script>
+        <script defer type="module" src="js/main.js"></script>
+    </head>
+    <body>
+        <!-- TEMPLATES -->
+
+        <template id="tag_viewer_template">
+            <details is="closing-details" class="tag_viewer tag_viewer--passage">
+                <summary class="tag_viewer__summary">Tags</summary>
+                <ul is="tag-list" class="tag_viewer__tag_list tag_list"></ul>
+            </details>
+        </template>
+
+        <template id="inline_tag_viewer_template">
+            <details is="closing-details" class="tag_viewer tag_viewer--inline">
+                <summary class="tag_viewer__summary"></summary>
+                <tab-group class="tag_viewer__tab_group">
+                    <tab-panel title="passage">
+                        <ul is="tag-list" class="tag_viewer__tag_list tag_list tag_list--passage"></ul>
+                    </tab-panel>
+                    <tab-panel title="whole route">
+                        <ul is="tag-list" class="tag_viewer__tag_list tag_list tag_list--route"></ul>
+                    </tab-panel>
+                </tab-group>
+            </details>
+        </template>
+
+        <template id="dialog_template">
+            <form class="dialog">
+                <p class="dialog__prompt">dialog prompt goes here</p>
+                <fieldset class="dialog__buttons">
+                </fieldset>
+            </form>
+        </template>
+
+        <template id="retrospective_template">
+            <section class="retrospective">
+                <details class="past_passages">
+                    <summary class="past_passages__summary">
+                        <img class="icon icon--tiny past_passages__expand" src="img/expand.svg" alt="expand icon"/>
+                        <img class="icon icon--tiny past_passages__contract" src="img/contract.svg" alt="contract icon"/>
+                        <span class="choice choice--current"></span>
+                    </summary>
+                </details>
+            </section>
+        </template>
+
+        <template id="past_passage_template">
+            <details class="past_passage">
+                <summary class="past_passage__summary choice choice--past"></summary>
+                <article class="past_passage__text"></article>
+                <hr/>
+            </details>
+        </template>
+
+        <template id="settings_overlay_template">
+            <form class="settings">
+                <fieldset class="settings__set metadata_set">
+                    <!--legend>Metadata</legend-->
+                    <label class="tag_editor__label">Tag Editor
+                        <textarea class="tag_editor"></textarea>
+                    </label>
+                    <button class="button save_tags" type='button'>Save Tags</button>
+                    <button class="button export_metadata" type='button'>Export Metadata</button>
+                </fieldset>
+                <fieldset class="settings__set controls_set">
+                    <button class="button close_settings" type='button'>Close</button>
+                </fieldset>
+            </form>
+        </template>
+
+        <!-- LANDING -->
+
+        <!--div id="drag_drop_overlay" class="overlay overlay--hidden">
+            Drop file here
+        </div-->
+
+        <section class="digitizer-landing">
+            <h1>Devious Digitizer</h1>
+            <span class="subtitle">An unofficial tool for navigating Devious Skooma's interactive stories.</span>
+
+            <div class="standout-box">
+                <input type="file" class="visually-hidden" accept="text/html" id="file_select" name="file_select"></input>
+                <label for="file_select" class="button button_label">Select a Devious World or Devious Mundanity file to run</label>
+                <p>or</p>
+                <p>drag the file onto this window</p>
+                <!--img class="icon" src="img/dragdrop.png" alt="drag-and-drop icon"/-->
+            </div>
+
+            <h2>The Digitizer's Features</h2>
+            <ul>
+                <li> Tag Summary: View all of the kinks a passage has</li>
+                <li> Tag Preview: Preview all of the kinks a route may contain</li>
+                <li> Look Back: Look back at preceding passages</li>
+                <li> Quick Search: Type some kinks into the search bar, and Digitizer will highlight links to routes with those kinks! <b>(Work in progress)</b></li>
+                <li> Kink and Squick dialogs: Customize lists of kinks you love or hate and The Digitizer will highlight links to passages to follow or skip <b>(Work in progress)</b></li>
+            </ul>
+        </section>
+
+    </body>
+</html>

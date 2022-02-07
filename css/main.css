@@ -1,0 +1,522 @@
+/* settings */
+    :root {
+        --bkg-color: #050313;
+        --text-color: white;
+        --primary-color: maroon;
+        --primary-highlight: #B00000;
+        --primary-dim: #500000;
+        --secondary-color: #326195; /* #682ED4 */
+        --secondary-highlight: #4d6ad8; /* #18bfef */
+        --secondary-dim: #29294a;
+    }
+
+
+/* Basic */
+    html, body, div, span, applet, object,
+    iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
+    pre, a, abbr, acronym, address, big, cite,
+    code, del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var, b,
+    u, i, center, dl, dt, dd, ol, ul, li, fieldset,
+    form, label, legend, table, caption, tbody,
+    tfoot, thead, tr, th, td, article, aside,
+    canvas, details, embed, figure, figcaption,
+    footer, header, hgroup, menu, nav, output, ruby,
+    section, summary, time, mark, audio, video {
+        margin: 0;
+        padding: 0;
+        border: 0;
+        font-size: 100%;
+        font: inherit;
+        vertical-align: baseline;
+    }
+
+    article, aside, details, figcaption, figure,
+    footer, header, hgroup, menu, nav, section {
+        display: block;
+    }
+
+    body {
+        line-height: 1;
+    }
+
+    ol, ul {
+        list-style: none;
+    }
+
+    blockquote, q {
+        quotes: none;
+    }
+
+        blockquote:before, blockquote:after, q:before, q:after {
+            content: '';
+            content: none;
+        }
+
+    table {
+        border-collapse: collapse;
+        border-spacing: 0;
+    }
+
+    body {
+        -webkit-text-size-adjust: none;
+    }
+
+    mark {
+        background-color: transparent;
+        color: inherit;
+    }
+
+    input::-moz-focus-inner {
+        border: 0;
+        padding: 0;
+    }
+
+    input, select, textarea {
+        -moz-appearance: none;
+        -webkit-appearance: none;
+        -ms-appearance: none;
+        appearance: none;
+    }
+
+    @-ms-viewport {
+        width: device-width;
+    }
+
+    body {
+        -ms-overflow-style: scrollbar;
+    }
+
+    @media screen and (max-width: 480px) {
+
+        html, body {
+            min-width: 320px;
+        }
+
+    }
+
+    html {
+        box-sizing: border-box;
+    }
+
+    *, *:before, *:after {
+        box-sizing: inherit;
+    }
+
+/* Type */
+
+    html {
+        font-size: 16pt;
+    }
+
+        @media screen and (max-width: 1680px) {
+
+            html {
+                font-size: 12pt;
+            }
+
+        }
+
+        @media screen and (max-width: 1280px) {
+
+            html {
+                font-size: 11pt;
+            }
+
+        }
+
+        @media screen and (max-width: 360px) {
+
+            html {
+                font-size: 10pt;
+            }
+
+        }
+
+    body {
+        color: white;
+        font-family: "Book Antiqua", Georgia, serif;
+        font-weight: 300;
+        font-size: 1rem;
+        line-height: 2;
+    }
+
+
+    h1, h2, h3, h4, h5, h6 {
+        font-family: Helvetica, sans-serif;
+        font-weight: 900;
+        line-height: 1.5;
+        letter-spacing: 0.075em;
+        margin: 0 0 1rem 0;
+    }
+
+    h1 {
+        font-size: 4rem;
+        line-height: 1.1;
+        margin: 0 0 2rem 0;
+    }
+
+    h2 {
+        font-size: 1.75rem;
+        line-height: 1.3;
+        margin: 0 0 1.5rem 0;
+    }
+
+    h3 {
+        font-size: 1.25rem;
+        margin: 0 0 1.5rem 0;
+    }
+
+    h4 {
+        font-size: 1rem;
+    }
+
+    h5 {
+        font-size: 0.9rem;
+    }
+
+    h6 {
+        font-size: 0.8rem;
+    }
+
+    sub {
+        font-size: 0.8rem;
+        position: relative;
+        top: 0.5rem;
+    }
+
+    sup {
+        font-size: 0.8rem;
+        position: relative;
+        top: -0.5rem;
+    }
+
+    blockquote {
+        border-left: solid 4px;
+        font-style: italic;
+        margin: 0 0 2rem 0;
+        padding: 0.5rem 0 0.5rem 2rem;
+    }
+
+    code {
+        border: solid 2px;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+        margin: 0 0.25rem;
+        padding: 0.25rem 0.65rem;
+    }
+
+    pre {
+        -webkit-overflow-scrolling: touch;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+        margin: 0 0 2rem 0;
+    }
+
+        pre code {
+            display: block;
+            line-height: 1.75;
+            padding: 1rem 1.5rem;
+            overflow-x: auto;
+        }
+
+    hr {
+        border: 0;
+        border-bottom: solid 2px;
+        margin: 2em 0;
+    }
+
+        hr.major {
+            margin: 5rem 0;
+        }
+
+    .align-left {
+        text-align: left;
+    }
+
+    .align-center {
+        text-align: center;
+    }
+
+    .align-right {
+        text-align: right;
+    }
+
+
+/* custom */
+    body {
+        background-color: var(--bkg-color);
+    }
+
+    p {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+
+    .standout-box {
+        display: flex;
+        justify-content: space-between;
+        flex-flow: column nowrap;
+        align-items: center;
+
+        background-color: hsla(0, 100%, 30%, 0.7);
+
+        max-width: 72rem;
+
+        border-radius: 1em;
+
+        margin: 2em;
+
+        padding: 2em;
+    }
+
+    .standout-box > p, .standout-box > label {
+        font-weight: 900;
+    }
+
+    .button {
+        background-color: var(--secondary-color);
+        border-radius: .3em;
+        padding: .3em;
+        box-shadow: .2rem .2rem .2rem black;
+        border: 1px solid var(--secondary-dim);
+    }
+
+    .button:hover, .button:focus, input:focus + .button_label {
+        background-color: var(--secondary-highlight);
+    }
+
+    .button:active {
+        box-shadow: .1rem .1rem .1rem black;
+        transform: translate(.1rem, .1rem);
+    }
+
+    .button_label {
+        border-radius: 0.5em;
+        padding: 1em;
+        margin-bottom: .5em;
+    }
+
+    .icon {
+        height: 2em;
+        margin: .5em;
+    }
+    
+    .icon--small {
+        height: 1.5em;
+        margin: .3em;
+    }
+    
+    .icon--tiny {
+        height: 1em;
+        margin: .3em;
+    }
+
+    .digitizer-landing {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+    }
+
+    .digitizer-landing--inactive {
+        display: none;
+    }
+
+    .visually-hidden {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+    }
+
+    tab-group {
+        --tab-background: var(--primary-dim);
+        --tab-active-background: var(--primary-color);
+    }
+
+    /* TODO add rule to hide .tag_viewer when "hide features" button is pressed (look for class on passages element?)
+    #passages.hide_digitizer .tag_viewer {
+        display: none;
+    }
+    */
+
+    .retrospective {
+        font: normal 16px "Georgia", "Book Antiqua", Georgia, serif;
+        margin-bottom: 1em;
+    }
+
+    .past_passages__summary {
+        display: flex;
+        flex-flow: row nowrap;
+        align-items: center;
+        
+        cursor: pointer;
+        list-style: none;
+        color: grey;
+    }
+    
+    .past_passages__contract, .past_passages__expand {
+        filter: invert(50%);
+        display: none;
+        margin-right: .8em;
+    }
+    
+    .past_passages:not([open]) > summary > .past_passages__expand {
+        display: inline;
+    }
+    
+    .past_passages[open] > summary > .past_passages__contract {
+        display: inline;
+    }
+
+    .past_passages {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: center;
+    }
+
+    .past_passage {
+        width: 90%;
+    }
+
+    .past_passage__summary {
+        cursor: pointer;
+    }
+
+    .tag_viewer__summary {
+        height: 1em;
+        cursor: pointer;
+    }
+
+    .tag_viewer--passage {
+        font: normal 16px "Georgia", "Book Antiqua", Georgia, serif;
+        margin-bottom: 1em;
+    }
+
+    .tag_viewer--passage > .tag_viewer__summary {
+        color: grey;
+    }
+
+    .tag_viewer--inline {
+        display: inline;
+    }
+
+    .tag_viewer--inline > :not(summary) {
+        position: absolute;
+    }
+
+    .tag_list {
+        background-color: var(--primary-color);
+        width: 100%;
+        height: 7em;
+
+        display: flex;
+        flex-flow: row wrap;
+        align-content: flex-start;
+        overflow-y: auto;
+
+        border: 1px solid var(--primary-dim);
+        border-radius: .3em;
+    }
+
+    .tag_list--passage, .tag_list--route {
+        width: 20em;
+        height: 10em;
+
+        border-radius: .3em .3em .3em 0;
+        border-bottom: 0;
+    }
+
+
+    /* override Twine's styling of unordered lists */
+    .passage ul.tag_list {
+        padding: 0;
+        margin-left: 0;
+    }
+
+    .tag_list__tag {
+        display: inline;
+        background-color: var(--secondary-color);
+        padding: .3em;
+        margin: .3em;
+        border-radius: .3em;
+    }
+
+    /* override Twine's styling of list items */
+    .passage li.tag_list__tag {
+        margin-right: .3em;
+    }
+
+    .overlay {
+        display: flex;
+        flex-flow: column nowrap;
+        justify-content: center;
+        align-items: center;
+
+        position: fixed;
+        z-index: 1;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+
+        background-color: rgba(0,0,0,0.4);
+    }
+
+    .overlay--hidden {
+        display: none;
+    }
+
+    .dialog {
+        background-color: var(--primary-color);
+        padding: 2em;
+        max-width: 40em;
+    }
+
+    .dialog__buttons {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-around;
+        align-items: flex-start;
+        align-content: space-around;
+    }
+
+    .dialog__button {
+        font-family: inherit;
+        font-size: inherit;
+        color: inherit;
+    }
+
+    .dialog__button--suggested {
+        font-size: 1.5em;
+        font-weight: bold;
+    }
+
+    .settings {
+        diplay: flex;
+        flex-flow: column nowrap;
+
+        background-color: var(--primary-color);
+        margin: 1rem;
+        max-width: 70em;
+    }
+
+    .settings__set {
+        padding: 1rem;
+    }
+
+    .metadata_set {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: .25rem
+    }
+
+    .tag_editor__label {
+        display: flex;
+        flex-direction: column;
+        grid-column: 1/5;
+    }
