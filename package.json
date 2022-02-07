@@ -1,9 +1,9 @@
 {
   "name": "devious-digitizer",
   "version": "0.1.0",
-  "description": "",
+  "description": "An unofficial tool for navigating Devious Skooma's interactive stories.",
   "repository": {
-    "url": "https://github.com/...",
+    "url": "https://github.com/WickedWitch6/devious-digitizer",
     "type": "git"
   },
   "author": "Wicked Witch",
