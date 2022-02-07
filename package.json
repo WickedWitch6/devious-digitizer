@@ -8,10 +8,16 @@
   },
   "author": "Wicked Witch",
   "license": "MIT",
+  "scripts": {
+    "test": "parcel index.html --no-hmr",
+    "build": "rm -r dist/ & parcel build index.html",
+    "deploy": "rm -r dist/ & parcel build index.html & push-dir --dir=dist --branch=gh-pages --cleanup"
+  },
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "devDependencies": {
     "parcel": "^2.0.1",
-    "parcel-reporter-static-files-copy": "^1.3.4"
+    "parcel-reporter-static-files-copy": "^1.3.4",
+    "push-dir": "^0.4.1"
   },
   "dependencies": {
     "attodom": "^0.13.1",
