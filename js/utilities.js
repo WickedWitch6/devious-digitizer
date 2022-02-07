@@ -32,49 +32,34 @@ export function filter_object_by_key(obj, pred) {
     return filter_object_by_entry(obj, ([key, _]) => pred(key))
 }
 
-// const get_ancestry_of = (tree) => (node) => {
-    // const parent = tree.get(node).parent
-    // if (parent === null) {
-        // return []
-    // } else {
-        // return [parent, ...get_ancestry_of(tree)(parent)]
-    // }
-// }
-
 export class Tree extends Map {
     constructor(root) {
         super()
-        
-        // this._set = Map.prototype.set
-        // this._delete = Map.prototype.delete
+
         if (root) {this.set_root(root)}
     }
-    
+
     root = null
-    
-    // get set() {}
-    
-    // get delete() {}
-    
+
     set_root(node, attributes = {}) {
         if (this.root !== null) throw new Error(`root '${this.root}' already exists`)
         this.set(node, Object.assign(attributes, {children: [], parent: null}))
         this.root = node
     }
-    
+
     add_child(parent, child, attributes = {}) {
         if (this.get(child) !== undefined) {throw new Error(`child ${child} already exists`)}
         this.get(parent)?.children?.push(child) ?? err(`parent '${parent}' does not exist or is malformed`)
         this.set(child, Object.assign(attributes, {children: [], parent: parent}))
     }
-    
+
     delete_node(node) {
         for (child of this.get(node).children) {
             this.delete_node(child)
         }
         this.delete(node)
     }
-    
+
     to_object(morphism) {
         if (typeof(morphism) === 'function') {
             return Object.fromEntries(Array.from(this, morphism))
@@ -82,7 +67,7 @@ export class Tree extends Map {
             return Object.fromEntries(this)
         }
     }
-    
+
     get_ancestry_of(node) {
         const ancestry = []
         let parent = this.get(node).parent
@@ -96,14 +81,14 @@ export class Tree extends Map {
     static from_graph_bfs(getChildren, root) {
         const tree = new Tree(root)
         const frontier = [root]
-        
+
         const addChildOf = (currentNode) => (id, data = {}) => {
             if (!tree.has(id)) {
                 frontier.push(id)
                 tree.add_child(currentNode, id, data)
             }
         }
-        
+
         while (frontier.length > 0) {
             const currentNode = frontier.pop()
             getChildren(addChildOf(currentNode), currentNode)

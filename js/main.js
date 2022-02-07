@@ -159,7 +159,6 @@ async function inject_digitizer_features () {
     // determine whether this is DW or DM by checking which character starts are present
     const DWChars = ['allstarstart', 'youngpunkstart', 'quietonestart', 'runawaystart', 'GwynStart', 'BuddyStart', 'AustinStart', 'DavidStart', 'JackStart', 'MikeStart', 'ThaddeusStart', 'SweetKidStart', 'MeanGirlStart', 'GirlGamerStart', 'SelfSufficientStart', 'CallistaStart', 'BritStart', 'WilmaStart', 'HollyStart', 'CelesteStart', 'HelenStart', 'MareiStart', 'IreneStart']
     const DMChars = ['CaliburnStart', 'DefianceStart', 'EdithStart', 'FionaStart', 'IrethStart', 'KaiStart', 'KiaraStart', 'KonkoStart', 'LeoStart', 'MaxiaStart', 'NicholasStart', 'SimoneStart', 'SiphaStart', 'ValerieStart', 'YamiStart']
-    // const hasPassage = psgName => store.querySelector(`[tiddler="${psgName}"]`) !== null
     const metadataPath = DWChars.some(tale.has, tale) ? 'data/DW_metadata.json' :
                          DMChars.some(tale.has, tale) ? 'data/DM_metadata.json' :
                                                     err('Story is neither Worldly nor Mundane')
@@ -221,8 +220,6 @@ async function inject_digitizer_features () {
         (e) => add_link_tag_lists(passages.querySelector('.passage.transition-in > .body'), route_tree)
     )
 
-    //document.body.addEventListener('mousedown', e => closeUnfocusedTagViewers(e.clientX, e.clientY))
-
     // Add sidebar links //
     const settings_link = el('li', null, el('a', {onclick: _ => show_settings(route_tree)}, 'Digitizer Settings'))
     document.getElementById('sidebar').append(settings_link)
@@ -259,14 +256,6 @@ function build_passage_graph(store_area) {
 
     return g
 }
-
-// function closeUnfocusedTagViewers(x, y) {
-//     document.querySelectorAll('.tag_viewer').forEach(el => {
-//         if (!el.contains(document.elementFromPoint(x, y))) {
-//             el.open = false
-//         }
-//     })
-// }
 
 function annotate_links_with_their_target(passage_name, tale, passage_body) {
     const link_targets = getLinks(tale.get(passage_name).text).map(({target}) => target)

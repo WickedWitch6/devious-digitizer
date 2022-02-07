@@ -301,12 +301,12 @@
         height: 2em;
         margin: .5em;
     }
-    
+
     .icon--small {
         height: 1.5em;
         margin: .3em;
     }
-    
+
     .icon--tiny {
         height: 1em;
         margin: .3em;
@@ -352,22 +352,22 @@
         display: flex;
         flex-flow: row nowrap;
         align-items: center;
-        
+
         cursor: pointer;
         list-style: none;
         color: grey;
     }
-    
+
     .past_passages__contract, .past_passages__expand {
         filter: invert(50%);
         display: none;
         margin-right: .8em;
     }
-    
+
     .past_passages:not([open]) > summary > .past_passages__expand {
         display: inline;
     }
-    
+
     .past_passages[open] > summary > .past_passages__contract {
         display: inline;
     }

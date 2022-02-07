@@ -31,18 +31,18 @@ const updateAttribute = (srm, attr, obj) => flow(
 export class ClosingDetails extends HTMLDetailsElement {
     constructor() {
         super()
-        
+
         this._closeIfUnfocused = (e) => {
             if (!this.contains(document.elementFromPoint(e.clientX, e.clientY))) {
                 this.open = false
             }
         }
     }
-    
+
     connectedCallback() {
         document.body.addEventListener('mousedown', this._closeIfUnfocused)
     }
-    
+
     disconnectedCallback () {
         document.body.removeEventListener('mousedown', this._closeIfUnfocused)
     }
@@ -57,19 +57,19 @@ export class TabPanel extends HTMLElement {
             el('div', {role: 'tabpanel'}, el('slot'))
         )
     }
-    
+
     connectedCallback() {
         this.title(this.getAttribute('title') ?? '')
         this.group(this.parentElement instanceof TabGroup ? this.parentElement : null)
         this.id = this.id || nanoid(10)
     }
-    
+
     static get observedAttributes() { return ['id', 'title']; }
     attributeChangedCallback(name, oldVal, newVal) {
         if (name === 'id') { this.idChanged(null) }
         else if (name === 'title') { this.title(newVal) }
     }
-    
+
     idChanged = stream(null)
     title = stream()
     _onTitleChanged = updateAttribute(this.title, 'title', this)
@@ -105,17 +105,17 @@ export class TabGroup extends HTMLElement {
             .querySelector('slot')
             .addEventListener('slotchange', e => this.tabs(e.target.assignedElements().filter(x => x instanceof TabPanel)))
     }
-    
+
     static get observedAttributes() { return ['active']; }
     attributeChangedCallback(name, oldVal, newVal) {
         if (name === 'active') { this.active(newVal) }
     }
-    
+
     defaultTabTitle = ''
     tabs = stream()
     active = stream(null)
     _onActiveChanged = updateAttribute(this.active, 'active', this)
-    
+
     renderTabList = combine([this.tabs, this.active], (tabs, active) => {
         // if `active` isn't a valid reference to a child tab-panel, default to the first tab-panel
         if (!tabs().some(el => el.id === active())) {
@@ -139,11 +139,11 @@ export class TagList extends HTMLUListElement {
     connectedCallback() {
         this.connected(true)
     }
-    
+
     connected = stream()
-    
+
     tags = stream([])
-    
+
     render = combine([this.tags, this.connected], (tags) =>
         // TODO convert to using attodom.list?
         this.replaceChildren(
@@ -158,37 +158,37 @@ export class TagList extends HTMLUListElement {
 export class Overlay {
     constructor({classes = [], attributes = new Map(), action}, children = []) {
         const overlay = document.createElement('div')
-        
+
         //add classes
         classes.forEach(cl => overlay.classList.add(cl))
         overlay.classList.add('overlay')
-        
+
         // add attributes
         for ([key, value] of attributes.entries()) {
             overlay.setAttribute(key, value)
         }
-        
+
         // add action for clicking overlay
         if (action) {
             overlay.addEventListener('click', (e) => {if (e.target === overlay) action(e, this)})
         }
-    
+
         // listen for request to close
         overlay.addEventListener('request_overlay_close', e => {e.stopPropagation(); this.close()})
-    
+
         // add children
         children.forEach(el => el.classList.add('overlay__child'))
         overlay.append(...children)
-        
+
         this._overlay = overlay
     }
-    
+
     static close_request = new Event('request_overlay_close', {bubbles:true, cancelable:true})
-    
+
     open(parent) {
         parent.appendChild(this._overlay)
     }
-    
+
     close() {
         this._overlay.remove()
     }
@@ -198,9 +198,9 @@ export class Dialog {
     constructor(prompt_text, buttons) {
         const dialog = clone_template('dialog_template')
         this._dialog = dialog.querySelector('.dialog')
-        
+
         dialog.querySelector('.dialog__prompt').innerText = prompt_text
-        
+
         for (const button_spec of buttons) {
             const button = document.createElement('button')
             button.setAttribute('type', 'button')
