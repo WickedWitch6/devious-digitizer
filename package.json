@@ -8,10 +8,12 @@
   },
   "author": "Wicked Witch",
   "license": "MIT",
+  "source": "index.html",
   "scripts": {
-    "test": "parcel index.html --no-hmr",
-    "build": "rm -r dist/ & parcel build index.html",
-    "deploy": "rm -r dist/ & parcel build index.html & push-dir --dir=dist --branch=gh-pages --cleanup"
+    "test": "parcel --no-hmr",
+    "clean": "rm -r dist/",
+    "build": "npm run clean && parcel build --public-url ./",
+    "deploy": "npm run build && push-dir --dir=dist --branch=gh-pages --cleanup"
   },
   "browserslist": "> 0.5%, last 2 versions, not dead",
   "devDependencies": {
