@@ -253,24 +253,39 @@
         margin-bottom: 0.5em;
     }
 
+    .subtitle {
+        margin-bottom: 1em;
+    }
+
     .standout-box {
         display: flex;
         justify-content: space-between;
         flex-flow: column nowrap;
         align-items: center;
 
-        background-color: hsla(0, 100%, 30%, 0.7);
+        background-color: var(--primary-color);
 
         max-width: 72rem;
 
         border-radius: 1em;
 
-        margin: 2em;
+        margin: 1em;
 
+        padding: 1em;
+    }
+
+    .standout-box--big {
+        margin: 2em;
         padding: 2em;
     }
 
-    .standout-box > p, .standout-box > label {
+    .standout-box--small {
+        margin: .5em;
+        padding:.5em;
+        background-color: var(--primary-dim);
+    }
+
+    .standout-box__text {
         font-weight: 900;
     }
 
