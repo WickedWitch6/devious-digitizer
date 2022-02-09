@@ -97,7 +97,7 @@ function gather_tags(passage_name, route_tree, recursive = false) {
     if (node.cum_tags) {
         return node.cum_tags
     } else {
-        return array_unique([...node.tags, ...node.children.flatMap(child => gather_tags(child, route_tree, true))])
+        return array_unique([...(node.tags ?? []), ...node.children.flatMap(child => gather_tags(child, route_tree, true))])
     }
 }
 
