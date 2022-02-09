@@ -27,21 +27,13 @@
         padding: 0;
         border: 0;
         font-size: 100%;
-        font: inherit;
+        font-family: inherit;
         vertical-align: baseline;
     }
 
     article, aside, details, figcaption, figure,
     footer, header, hgroup, menu, nav, section {
         display: block;
-    }
-
-    body {
-        line-height: 1;
-    }
-
-    ol, ul {
-        list-style: none;
     }
 
     blockquote, q {
@@ -138,7 +130,7 @@
         font-family: "Book Antiqua", Georgia, serif;
         font-weight: 300;
         font-size: 1rem;
-        line-height: 2;
+        line-height: 1.5;
     }
 
 
@@ -331,10 +323,16 @@
         display: flex;
         flex-flow: column nowrap;
         align-items: center;
+        
+        margin: 0 1em;
     }
 
     .digitizer-landing--inactive {
         display: none;
+    }
+    
+    .feature-list > li {
+        margin-bottom: .5em;
     }
 
     .visually-hidden {
