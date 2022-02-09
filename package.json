@@ -11,7 +11,7 @@
   "source": "index.html",
   "scripts": {
     "test": "parcel --no-hmr",
-    "clean": "rm -r dist/",
+    "clean": "rm -rf dist/",
     "build": "npm run clean && parcel build --public-url ./",
     "deploy": "npm run build && push-dir --dir=dist --branch=gh-pages --cleanup"
   },
