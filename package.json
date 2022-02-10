@@ -15,7 +15,7 @@
     "build": "npm run clean && parcel build --public-url ./",
     "deploy": "npm run build && push-dir --dir=dist --branch=gh-pages --cleanup"
   },
-  "browserslist": "supports es6",
+  "browserslist": "since 2016",
   "devDependencies": {
     "parcel": "^2.0.1",
     "parcel-reporter-static-files-copy": "^1.3.4",
