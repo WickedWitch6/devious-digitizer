@@ -147,7 +147,7 @@ export class TagList extends HTMLUListElement {
     render = combine([this.tags, this.connected], (tags) =>
         // TODO convert to using attodom.list?
         this.replaceChildren(
-            ...tags().map(tag => el('li', {class: 'tag_list__tag'}, tag))
+            ...tags().sort().map(tag => el('li', {class: 'tag_list__tag'}, tag))
         )
     )
 }
