@@ -92,7 +92,7 @@ function inline_tag_viewer(passage_tags, route_tags) {
 function gather_tags(passage_name, route_tree, recursive = false) {
     const node = route_tree.get(passage_name)
     if (!recursive) {
-        return node.tags
+        return node.tags ?? []
     }
     if (node.cum_tags) {
         return node.cum_tags
