@@ -33,10 +33,10 @@ export function filter_object_by_key(obj, pred) {
 }
 
 export class Tree extends Map {
-    constructor(root) {
+    constructor(root, attributes = {}) {
         super()
 
-        if (root) {this.set_root(root)}
+        if (root) {this.set_root(root, attributes)}
     }
 
     root = null
@@ -54,7 +54,7 @@ export class Tree extends Map {
     }
 
     delete_node(node) {
-        for (child of this.get(node).children) {
+        for (const child of this.get(node).children) {
             this.delete_node(child)
         }
         this.delete(node)
@@ -76,6 +76,27 @@ export class Tree extends Map {
             parent = this.get(parent).parent
         }
         return ancestry
+    }
+
+    // I don't trust this algorithm. Does it have bugs? Is it efficient? Does it cover all edge
+    //   cases? No clue. But it's not recursive.
+    // Collapses `tree` into a single value using an accumulator function `f` (similar to `reduce`)
+    //   optionally starting at subtree `node`. `f` is passed each node except the node's
+    //   `children` attribute instead holds the results of applying `f` to the node's children.
+    static cata(tree, node = null, f) {
+        const newLayer = node => ({node, before: [...tree.get(node).children], after: []})
+        const stack = [newLayer(node ?? tree.root)]
+
+        while (true) {
+            if (stack.at(-1).before.length) {
+                stack.push(newLayer(stack.at(-1).before.pop()))
+            } else {
+                const curr = stack.pop()
+                const res = f({...tree.get(curr.node), children: curr.after})
+                if (!stack.length) return res
+                stack.at(-1).after.push(res)
+            }
+        }
     }
 
     static from_graph_bfs(getChildren, root) {
