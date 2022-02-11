@@ -89,16 +89,16 @@ function inline_tag_viewer(passage_tags, route_tags) {
 
 /// Devious Digitizer ///
 
-function gather_tags(passage_name, route_tree, recursive = false) {
-    const node = route_tree.get(passage_name)
-    if (!recursive) {
-        return node.tags ?? []
-    }
-    if (node.cum_tags) {
-        return node.cum_tags
-    } else {
-        return array_unique([...(node.tags ?? []), ...node.children.flatMap(child => gather_tags(child, route_tree, true))])
-    }
+function gather_tags(title, route_tree, recursive = false) {
+    if (!recursive) return route_tree.get(title).tags ?? []
+    return array_unique(
+        Tree.cata(
+            route_tree,
+            title,
+            node => node.cum_tags ?? (node.tags ?? []).concat(...node.children)
+        )
+    )
+        // array_unique([...(node.tags ?? []), ...node.children.flatMap(child => gather_tags(child, route_tree, true))])
 }
 
 async function switch_to_story(file) {
@@ -239,17 +239,17 @@ const getLinks = body =>
 function build_passage_graph(store_area) {
     const g = createGraph()
 
-    const passage_names = new Set(Array.from(store_area.children).map((el) => el.getAttribute('tiddler')))
+    const titles = new Set(Array.from(store_area.children).map((el) => el.getAttribute('tiddler')))
 
     for (const passage of store_area.children) {
-        const passage_name = passage.getAttribute('tiddler')
+        const title = passage.getAttribute('tiddler')
 
         for (const { text, target } of getLinks(passage.innerText)) {
             // only include links to passages that exist
-            if (passage_names.has(target)) {
+            if (titles.has(target)) {
                 // create a link between the current and target passages, creating a node for the
                 //   target passage if one does not yet exist, and annotating the link with its text
-                g.addLink(passage_name, target, { text })
+                g.addLink(title, target, { text })
             }
         }
     }
@@ -257,8 +257,8 @@ function build_passage_graph(store_area) {
     return g
 }
 
-function annotate_links_with_their_target(passage_name, tale, passage_body) {
-    const link_targets = getLinks(tale.get(passage_name).text).map(({target}) => target)
+function annotate_links_with_their_target(title, tale, passage_body) {
+    const link_targets = getLinks(tale.get(title).text).map(({target}) => target)
     const links = Array.from(passage_body.querySelectorAll('a'))
 
     zip([links, link_targets]).forEach(([link, target]) => link.setAttribute('data-target', target))
@@ -268,12 +268,12 @@ function add_link_tag_lists(passage_body, route_tree) {
     passage_body
         .querySelectorAll('a')
         .forEach((link) => {
-            const passage_name = link.getAttribute('data-target') // NOTE depends on annotate_links_with_their_target
+            const title = link.getAttribute('data-target') // NOTE depends on annotate_links_with_their_target
             // if target passage exists
-            if (route_tree.has(passage_name)) {
+            if (route_tree.has(title)) {
                 link.before( inline_tag_viewer(
-                    gather_tags(passage_name, route_tree, false),
-                    gather_tags(passage_name, route_tree, true)
+                    gather_tags(title, route_tree, false),
+                    gather_tags(title, route_tree, true)
                 ))
             }
         })
