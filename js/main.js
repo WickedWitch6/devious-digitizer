@@ -280,8 +280,8 @@ function add_link_tag_lists(passage_body, route_tree) {
 }
 
 function extract_metadata(route_tree) {
-    const exclude = new Set(['children', 'parent', 'link'])
-    const strip = value => filter_object_by_key(value, key => !exclude.has(key))
+    const include = new Set(['tags'])
+    const strip = value => filter_object_by_key(value, key => include.has(key))
 
     return route_tree.to_object(([key, value]) => [key, strip(value)])
 }
