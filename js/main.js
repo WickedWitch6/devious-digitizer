@@ -90,12 +90,12 @@ function inline_tag_viewer(passage_tags, route_tags) {
 /// Devious Digitizer ///
 
 function gather_tags(title, route_tree, recursive = false) {
-    if (!recursive) return route_tree.get(title).tags ?? []
+    if (!recursive) return route_tree.get(title)?.tags ?? []
     return array_unique(
         Tree.cata(
             route_tree,
             title,
-            node => node.cum_tags ?? (node.tags ?? []).concat(...node.children)
+            node => (node.tags ?? []).concat(...node.children)
         )
     )
         // array_unique([...(node.tags ?? []), ...node.children.flatMap(child => gather_tags(child, route_tree, true))])
