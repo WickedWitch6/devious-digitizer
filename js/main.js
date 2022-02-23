@@ -33,7 +33,7 @@ document.body.addEventListener('drop', e => {
 /// TEMPLATES ///
 
 class SettingsDialog {
-    constructor(route_tree, close_action) {
+    constructor(curr, route_tree, close_action) {
         const dialog = clone_template('settings_overlay_template')
         this._dialog = dialog.querySelector('.settings')
 
@@ -41,6 +41,14 @@ class SettingsDialog {
             export_object(extract_metadata(route_tree), 'metadata.json'))
 
         dialog.querySelector('.close_settings').addEventListener('click', e => close_action(e, this))
+
+        const tagEditor = dialog.querySelector('.tag_editor')
+        tagEditor.value = gather_tags(curr, route_tree).join(' ')
+
+        dialog.querySelector('.save_tags').addEventListener('click', _ => {
+            const psg = route_tree.get(curr)
+            if (psg) psg.tags = tagEditor.value.split(' ')
+        })
     }
 }
 
@@ -155,6 +163,7 @@ async function inject_digitizer_features () {
     const store = document.getElementById('storeArea')
     const passages = document.getElementById('passages')
     const tale = window.tale
+    const state = window.state
 
     // determine whether this is DW or DM by checking which character starts are present
     const DWChars = ['allstarstart', 'youngpunkstart', 'quietonestart', 'runawaystart', 'GwynStart', 'BuddyStart', 'AustinStart', 'DavidStart', 'JackStart', 'MikeStart', 'ThaddeusStart', 'SweetKidStart', 'MeanGirlStart', 'GirlGamerStart', 'SelfSufficientStart', 'CallistaStart', 'BritStart', 'WilmaStart', 'HollyStart', 'CelesteStart', 'HelenStart', 'MareiStart', 'IreneStart']
@@ -221,18 +230,18 @@ async function inject_digitizer_features () {
     )
 
     // Add sidebar links //
-    const settings_link = el('li', null, el('a', {onclick: _ => show_settings(route_tree)}, 'Digitizer Settings'))
+    const settings_link = el('li', null, el('a', {onclick: _ => show_settings(state.history[0].passage.title, route_tree)}, 'Digitizer Settings'))
     document.getElementById('sidebar').append(settings_link)
 }
 
-function show_settings(route_tree) {
+function show_settings(curr, route_tree) {
     const close_action = (_, self) => self._dialog.dispatchEvent(Overlay.close_request)
-    new Overlay({action: (e, self) => self.close()},
-        [(new SettingsDialog(route_tree, close_action))._dialog]
+    new Overlay({action: close_action},
+        [(new SettingsDialog(curr, route_tree, close_action))._dialog]
     ).open(document.body)
 }
 
-const getLinks = body => 
+const getLinks = body =>
     Array.from(body.matchAll(/\[\[(?:([^|]+)\|)?([^\]]+)\]\]/g)).map(([_, text,  target]) => ({ text, target }))
 
 // TODO? rewrite using tale instead of store_area
