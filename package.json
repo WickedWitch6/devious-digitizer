@@ -11,7 +11,7 @@
   "source": "index.html",
   "scripts": {
     "test": "parcel --no-hmr",
-    "clean": "rm -rf dist/",
+    "clean": "rimraf dist/",
     "build": "npm run clean && parcel build --public-url ./",
     "deploy": "npm run build && push-dir --dir=dist --branch=gh-pages --cleanup"
   },
@@ -19,7 +19,8 @@
   "devDependencies": {
     "parcel": "^2.0.1",
     "parcel-reporter-static-files-copy": "^1.3.4",
-    "push-dir": "^0.4.1"
+    "push-dir": "^0.4.1",
+    "rimraf": "^3.0.2"
   },
   "dependencies": {
     "attodom": "^0.13.1",
