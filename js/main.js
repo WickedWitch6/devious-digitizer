@@ -1,17 +1,17 @@
 import { el } from 'attodom'
 const createGraph = require('ngraph.graph')
 import { ClosingDetails, TabPanel, TabGroup, TagList, Overlay, Dialog } from './components.js'
-import { err, zip, equal, array_unique, filter_object_by_key, Tree, bfs_tree, clone_template_from,
-         parse_doc, export_object } from './utilities.js'
+import { err, zip, equal, arrayUnique, filterObjectByKey, Tree, bfsTree, cloneTemplateFrom,
+         parseDoc, exportObject } from './utilities.js'
 
-const clone_template = clone_template_from(document)
+const cloneTemplate = cloneTemplateFrom(document)
 
 customElements.define('closing-details', ClosingDetails, {extends: 'details'})
 customElements.define('tab-panel', TabPanel)
 customElements.define('tab-group', TabGroup)
 customElements.define('tag-list', TagList, {extends: 'ul'})
 
-document.getElementById('file_select').addEventListener('change', e => switch_to_story(e.target.files[0]))
+document.getElementById('file_select').addEventListener('change', e => switchToStory(e.target.files[0]))
 
 const dragDropOverlay = document.getElementById('drag_drop_overlay')
 document.body.addEventListener('dragenter', e => {
@@ -26,52 +26,52 @@ document.body.addEventListener('dragleave', _ => {
 document.body.addEventListener('drop', e => {
     e.preventDefault()
     e.stopPropagation()
-    if (e.dataTransfer.files) switch_to_story(e.dataTransfer.files[0])
+    if (e.dataTransfer.files) switchToStory(e.dataTransfer.files[0])
 })
 
 
 /// TEMPLATES ///
 
 class SettingsDialog {
-    constructor(curr, route_tree, close_action) {
-        const dialog = clone_template('settings_overlay_template')
+    constructor(curr, routeTree, closeAction) {
+        const dialog = cloneTemplate('settings_overlay_template')
         this._dialog = dialog.querySelector('.settings')
 
         dialog.querySelector('.export_metadata').addEventListener('click', _ =>
-            export_object(extract_metadata(route_tree), 'metadata.json'))
+            exportObject(extractMetadata(routeTree), 'metadata.json'))
 
-        dialog.querySelector('.close_settings').addEventListener('click', e => close_action(e, this))
+        dialog.querySelector('.close_settings').addEventListener('click', e => closeAction(e, this))
 
         const tagEditor = dialog.querySelector('.tag_editor')
-        tagEditor.value = gather_tags(curr, route_tree).join(' ')
+        tagEditor.value = gatherTags(curr, routeTree).join(' ')
 
         dialog.querySelector('.save_tags').addEventListener('click', _ => {
-            const psg = route_tree.get(curr)
+            const psg = routeTree.get(curr)
             if (psg) psg.tags = tagEditor.value.split(' ')
         })
     }
 }
 
-function retrospective(curr, route_tree, tale) {
-    const template = clone_template('retrospective_template')
+function retrospective(curr, routeTree, tale) {
+    const template = cloneTemplate('retrospective_template')
 
-    template.querySelector('.choice--current').innerText = route_tree.get(curr)?.link?.text ?? ''
+    template.querySelector('.choice--current').innerText = routeTree.get(curr)?.link?.text ?? ''
 
     template.querySelector('.past_passages').ontoggle = (e) => {
         if (e.target.open) {
             e.target.ontoggle = null
             e.target.prepend(
-                ...route_tree
-                .get_ancestry_of(curr)
-                .map(title => past_passage(route_tree.get(title)?.link?.text ?? 'Start', tale.get(title))))
+                ...routeTree
+                .getAncestryOf(curr)
+                .map(title => pastPassage(routeTree.get(title)?.link?.text ?? 'Start', tale.get(title))))
         }
     }
 
     return template
 }
 
-function past_passage(choice, psg) {
-    const template = clone_template('past_passage_template')
+function pastPassage(choice, psg) {
+    const template = cloneTemplate('past_passage_template')
 
     template.querySelector('.choice--past').innerText = choice
     template.querySelector('.past_passage__text').append(psg.render().querySelector('.body.content'))
@@ -79,63 +79,63 @@ function past_passage(choice, psg) {
     return template
 }
 
-function passage_tag_viewer(tags) {
-    const tag_viewer = clone_template('tag_viewer_template')
-    tag_viewer.querySelector('.tag_list').tags(tags)
+function passageTagViewer(tags) {
+    const tagViewer = cloneTemplate('tag_viewer_template')
+    tagViewer.querySelector('.tag_list').tags(tags)
 
-    return tag_viewer
+    return tagViewer
 }
 
-function inline_tag_viewer(passage_tags, route_tags) {
-    const tag_viewer = clone_template('inline_tag_viewer_template')
-    tag_viewer.querySelector('.tag_list--passage').tags(passage_tags)
-    tag_viewer.querySelector('.tag_list--route').tags(route_tags)
+function inlineTagViewer(passageTags, routeTags) {
+    const tagViewer = cloneTemplate('inline_tag_viewer_template')
+    tagViewer.querySelector('.tag_list--passage').tags(passageTags)
+    tagViewer.querySelector('.tag_list--route').tags(routeTags)
 
-    return tag_viewer
+    return tagViewer
 }
 
 
 /// Devious Digitizer ///
 
-function gather_tags(title, route_tree, recursive = false) {
-    if (!recursive) return route_tree.get(title)?.tags ?? []
-    return array_unique(
+function gatherTags(title, routeTree, recursive = false) {
+    if (!recursive) return routeTree.get(title)?.tags ?? []
+    return arrayUnique(
         Tree.cata(
-            route_tree,
+            routeTree,
             title,
             node => (node.tags ?? []).concat(...node.children)
         )
     )
-        // array_unique([...(node.tags ?? []), ...node.children.flatMap(child => gather_tags(child, route_tree, true))])
+        // arrayUnique([...(node.tags ?? []), ...node.children.flatMap(child => gatherTags(child, routeTree, true))])
 }
 
-async function switch_to_story(file) {
+async function switchToStory(file) {
     // TODO? clear previous twine elements to allow for loading more than one story
-    const story_text = await file.text()
-    const story_doc = parse_doc(story_text)
+    const storyText = await file.text()
+    const storyDoc = parseDoc(storyText)
 
     // is document one of DW or DM?
-    if (!story_doc.querySelector('#storeArea > [tiddler = "CharGenMain"]')) {
-        const confirm_continue = await ask_to_confirm(file.name)
-        if (!confirm_continue) {
+    if (!storyDoc.querySelector('#storeArea > [tiddler = "CharGenMain"]')) {
+        const confirmContinue = await askToConfirm(file.name)
+        if (!confirmContinue) {
             return
     }}
 
-    hide_landing()
-    load_doc_into_dom(story_doc)
-    await inject_digitizer_features()
+    hideLanding()
+    loadDocIntoDom(storyDoc)
+    await injectDigitizerFeatures()
 }
 
-function hide_landing() {
+function hideLanding() {
     document.querySelector('.digitizer-landing').classList.add('digitizer-landing--inactive')
 }
 
 // modal prompt: "file does not appear to be a Devious World or Devious Mundanity file".
 //      options: cancel (return false), try anyway (return true), clicking away is same as cancel
-async function ask_to_confirm(filename) {
+async function askToConfirm(filename) {
     return new Promise((res, rej) => {
         const respond = response => (e, self) => {
-            self._dialog.dispatchEvent(Overlay.close_request)
+            self._dialog.dispatchEvent(Overlay.closeRequest)
             res(response)
         }
 
@@ -150,7 +150,7 @@ async function ask_to_confirm(filename) {
     })
 }
 
-function load_doc_into_dom(doc) {
+function loadDocIntoDom(doc) {
     document.head.insertAdjacentHTML("beforeend", doc.head.innerHTML)
     document.body.insertAdjacentHTML("beforeend", doc.body.innerHTML)
 
@@ -159,7 +159,7 @@ function load_doc_into_dom(doc) {
     dispatchEvent(new Event('load'))
 }
 
-async function inject_digitizer_features () {
+async function injectDigitizerFeatures () {
     const store = document.getElementById('storeArea')
     const passages = document.getElementById('passages')
     const tale = window.tale
@@ -175,19 +175,19 @@ async function inject_digitizer_features () {
     const metadata = await fetch(metadataPath).then(res => res.json())
 
     // build a graph from passages' links
-    const passage_graph = build_passage_graph(store)
+    const passageGraph = buildPassageGraph(store)
 
     // render the graph into a tree of story routes by following links starting at CharGenMain and dropping cycles
-    const route_tree = Tree.from_graph_bfs(
-        (addChild, currentChild) => passage_graph.forEachLinkedNode(
+    const routeTree = Tree.fromGraphBfs(
+        (addChild, currentChild) => passageGraph.forEachLinkedNode(
             currentChild,
             (child, link) => addChild(child.id, Object.assign({link: link.data}, child.data)),
             true // only traverse outbound links
         ),
         'CharGenMain'
     )
-    // decorate route_tree with tags and other metadata
-    route_tree.forEach((value, key) => route_tree.set(key, Object.assign(value, metadata[key])))
+    // decorate routeTree with tags and other metadata
+    routeTree.forEach((value, key) => routeTree.set(key, Object.assign(value, metadata[key])))
 
     // dispatch events when switching passages
     window.state.display = function (title, source, type, callback) {
@@ -206,13 +206,13 @@ async function inject_digitizer_features () {
         (e) => {
             const curr = e.detail.title
             // if we have metadata for current passage
-            if (route_tree.has(curr)) {
+            if (routeTree.has(curr)) {
                 // above passage, add a viewer for current passage's tags and
-                passages.prepend(passage_tag_viewer(gather_tags(curr, route_tree)))
+                passages.prepend(passageTagViewer(gatherTags(curr, routeTree)))
                 // if the current passage has preceding passages
-                if (route_tree.get(curr).parent)
+                if (routeTree.get(curr).parent)
                     // a retrospective of preceding passages
-                    passages.prepend(retrospective(curr, route_tree, tale))
+                    passages.prepend(retrospective(curr, routeTree, tale))
             }
         }
     )
@@ -220,37 +220,37 @@ async function inject_digitizer_features () {
     // add target passage name to passage links to assist in adding the inline tag viewers
     passages.addEventListener(
         'after_tale_display',
-        (e) => annotate_links_with_their_target(e.detail.title, tale, passages.querySelector('.passage.transition-in > .body'))
+        (e) => annotateLinksWithTheirTarget(e.detail.title, tale, passages.querySelector('.passage.transition-in > .body'))
     )
 
     // add inline tag viewer elements to new passages
     passages.addEventListener(
         'after_tale_display',
-        (e) => add_link_tag_lists(passages.querySelector('.passage.transition-in > .body'), route_tree)
+        (e) => addLinkTagLists(passages.querySelector('.passage.transition-in > .body'), routeTree)
     )
 
     // Add sidebar links //
-    const settings_link = el('li', null, el('a', {onclick: _ => show_settings(state.history[0].passage.title, route_tree)}, 'Digitizer Settings'))
-    document.getElementById('sidebar').append(settings_link)
+    const settingsLink = el('li', null, el('a', {onclick: _ => showSettings(state.history[0].passage.title, routeTree)}, 'Digitizer Settings'))
+    document.getElementById('sidebar').append(settingsLink)
 }
 
-function show_settings(curr, route_tree) {
-    const close_action = (_, self) => self._dialog.dispatchEvent(Overlay.close_request)
-    new Overlay({action: close_action},
-        [(new SettingsDialog(curr, route_tree, close_action))._dialog]
+function showSettings(curr, routeTree) {
+    const closeAction = (_, self) => self._dialog.dispatchEvent(Overlay.closeRequest)
+    new Overlay({action: closeAction},
+        [(new SettingsDialog(curr, routeTree, closeAction))._dialog]
     ).open(document.body)
 }
 
 const getLinks = body =>
     Array.from(body.matchAll(/\[\[(?:([^|]+)\|)?([^\]]+)\]\]/g)).map(([_, text,  target]) => ({ text, target }))
 
-// TODO? rewrite using tale instead of store_area
-function build_passage_graph(store_area) {
+// TODO? rewrite using tale instead of storeArea
+function buildPassageGraph(storeArea) {
     const g = createGraph()
 
-    const titles = new Set(Array.from(store_area.children).map((el) => el.getAttribute('tiddler')))
+    const titles = new Set(Array.from(storeArea.children).map((el) => el.getAttribute('tiddler')))
 
-    for (const passage of store_area.children) {
+    for (const passage of storeArea.children) {
         const title = passage.getAttribute('tiddler')
 
         for (const { text, target } of getLinks(passage.innerText)) {
@@ -266,31 +266,31 @@ function build_passage_graph(store_area) {
     return g
 }
 
-function annotate_links_with_their_target(title, tale, passage_body) {
-    const link_targets = getLinks(tale.get(title).text).map(({target}) => target)
-    const links = Array.from(passage_body.querySelectorAll('a'))
+function annotateLinksWithTheirTarget(title, tale, passageBody) {
+    const linkTargets = getLinks(tale.get(title).text).map(({target}) => target)
+    const links = Array.from(passageBody.querySelectorAll('a'))
 
-    zip([links, link_targets]).forEach(([link, target]) => link.setAttribute('data-target', target))
+    zip([links, linkTargets]).forEach(([link, target]) => link.setAttribute('data-target', target))
 }
 
-function add_link_tag_lists(passage_body, route_tree) {
-    passage_body
+function addLinkTagLists(passageBody, routeTree) {
+    passageBody
         .querySelectorAll('a')
         .forEach((link) => {
-            const title = link.getAttribute('data-target') // NOTE depends on annotate_links_with_their_target
+            const title = link.getAttribute('data-target') // NOTE depends on annotateLinksWithTheirTarget
             // if target passage exists
-            if (route_tree.has(title)) {
-                link.before( inline_tag_viewer(
-                    gather_tags(title, route_tree, false),
-                    gather_tags(title, route_tree, true)
+            if (routeTree.has(title)) {
+                link.before( inlineTagViewer(
+                    gatherTags(title, routeTree, false),
+                    gatherTags(title, routeTree, true)
                 ))
             }
         })
 }
 
-function extract_metadata(route_tree) {
+function extractMetadata(routeTree) {
     const include = new Set(['tags'])
-    const strip = value => filter_object_by_key(value, key => include.has(key))
+    const strip = value => filterObjectByKey(value, key => include.has(key))
 
-    return route_tree.to_object(([key, value]) => [key, strip(value)])
+    return routeTree.toObject(([key, value]) => [key, strip(value)])
 }

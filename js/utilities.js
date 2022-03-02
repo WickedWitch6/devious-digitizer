@@ -12,55 +12,55 @@ export const pipe = (...fns) => x => fns.reduce((acc, fn) => fn(acc), x)
 
 export const zip = rows => rows[0].map( (_,c) => rows.map( row => row[c] ))
 
-export function set_union(...sets) {
+export function setUnion(...sets) {
     const union = new Set(sets.shift())
-    for (const curr_set of sets) {
-        for (const elem of curr_set) {
+    for (const currSet of sets) {
+        for (const elem of currSet) {
             union.add(elem)
         }
     }
     return union
 }
 
-export const array_unique = (arr) => Array.from(new Set(arr))
+export const arrayUnique = (arr) => Array.from(new Set(arr))
 
-export function filter_object_by_entry(obj, pred) {
+export function filterObjectByEntry(obj, pred) {
     return Object.fromEntries(Object.entries(obj).filter(pred))
 }
 
-export function filter_object_by_key(obj, pred) {
-    return filter_object_by_entry(obj, ([key, _]) => pred(key))
+export function filterObjectByKey(obj, pred) {
+    return filterObjectByEntry(obj, ([key, _]) => pred(key))
 }
 
 export class Tree extends Map {
     constructor(root, attributes = {}) {
         super()
 
-        if (root) {this.set_root(root, attributes)}
+        if (root) {this.setRoot(root, attributes)}
     }
 
     root = null
 
-    set_root(node, attributes = {}) {
+    setRoot(node, attributes = {}) {
         if (this.root !== null) throw new Error(`root '${this.root}' already exists`)
         this.set(node, Object.assign(attributes, {children: [], parent: null}))
         this.root = node
     }
 
-    add_child(parent, child, attributes = {}) {
+    addChild(parent, child, attributes = {}) {
         if (this.get(child) !== undefined) {throw new Error(`child ${child} already exists`)}
         this.get(parent)?.children?.push(child) ?? err(`parent '${parent}' does not exist or is malformed`)
         this.set(child, Object.assign(attributes, {children: [], parent: parent}))
     }
 
-    delete_node(node) {
+    deleteNode(node) {
         for (const child of this.get(node).children) {
-            this.delete_node(child)
+            this.deleteNode(child)
         }
         this.delete(node)
     }
 
-    to_object(morphism) {
+    toObject(morphism) {
         if (typeof(morphism) === 'function') {
             return Object.fromEntries(Array.from(this, morphism))
         } else {
@@ -68,7 +68,7 @@ export class Tree extends Map {
         }
     }
 
-    get_ancestry_of(node) {
+    getAncestryOf(node) {
         const ancestry = []
         let parent = this.get(node).parent
         while (parent !== null) {
@@ -99,14 +99,14 @@ export class Tree extends Map {
         }
     }
 
-    static from_graph_bfs(getChildren, root) {
+    static fromGraphBfs(getChildren, root) {
         const tree = new Tree(root)
         const frontier = [root]
 
         const addChildOf = (currentNode) => (id, data = {}) => {
             if (!tree.has(id)) {
                 frontier.push(id)
-                tree.add_child(currentNode, id, data)
+                tree.addChild(currentNode, id, data)
             }
         }
 
@@ -120,10 +120,10 @@ export class Tree extends Map {
 
 /// HTML ///
 
-export const clone_template_from = (doc) => (template_id) => {
+export const cloneTemplateFrom = (doc) => (templateId) => {
     // NOTE importNode works like cloneNode except it upgrades custom elements. Needed because
     //   it works on template contents, unlike customElements.upgrade.
-    const template = doc.importNode(doc.getElementById(template_id).content, true)
+    const template = doc.importNode(doc.getElementById(templateId).content, true)
     // clear the fragment of extraneous nodes that might break things
     // TODO Apply recursively to comments
     Array.from(template.childNodes).forEach(el => {
@@ -132,10 +132,10 @@ export const clone_template_from = (doc) => (template_id) => {
     return template
 }
 
-export function parse_doc(doc_text) {
-    return new DOMParser().parseFromString(doc_text, "text/html")
+export function parseDoc(docText) {
+    return new DOMParser().parseFromString(docText, "text/html")
 }
 
-export function export_object(obj, filename) {
+export function exportObject(obj, filename) {
     saveAs(new Blob([JSON.stringify(obj)], {type: 'application/json'}), filename)
 }

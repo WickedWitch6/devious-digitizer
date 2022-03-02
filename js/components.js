@@ -6,7 +6,7 @@
 
 import { el } from 'attodom'
 import { nanoid } from 'nanoid'
-import { flow, setClass, clone_template_from } from './utilities.js'
+import { flow, setClass, cloneTemplateFrom } from './utilities.js'
 
 import flyd from 'flyd'
 import { dropRepeats } from 'flyd/module/droprepeats'
@@ -17,7 +17,7 @@ const update = (s, fn) => s(fn(s()))
 
 
 // TODO this file should not be using the global document variable
-const clone_template = clone_template_from(document)
+const cloneTemplate = cloneTemplateFrom(document)
 
 const updateAttribute = (srm, attr, obj) => flow(
     srm,
@@ -183,7 +183,7 @@ export class Overlay {
         this._overlay = overlay
     }
 
-    static close_request = new Event('request_overlay_close', {bubbles:true, cancelable:true})
+    static closeRequest = new Event('request_overlay_close', {bubbles:true, cancelable:true})
 
     open(parent) {
         parent.appendChild(this._overlay)
@@ -195,18 +195,18 @@ export class Overlay {
 }
 
 export class Dialog {
-    constructor(prompt_text, buttons) {
-        const dialog = clone_template('dialog_template')
+    constructor(promptText, buttons) {
+        const dialog = cloneTemplate('dialog_template')
         this._dialog = dialog.querySelector('.dialog')
 
-        dialog.querySelector('.dialog__prompt').innerText = prompt_text
+        dialog.querySelector('.dialog__prompt').innerText = promptText
 
-        for (const button_spec of buttons) {
+        for (const buttonSpec of buttons) {
             const button = document.createElement('button')
             button.setAttribute('type', 'button')
-            button.innerText = button_spec.text;
-            ['button','dialog__button'].concat(button_spec.classes ?? []).forEach((c) => button.classList.add(c))
-            button.addEventListener('click', (e) => button_spec.action(e, this))
+            button.innerText = buttonSpec.text;
+            ['button','dialog__button'].concat(buttonSpec.classes ?? []).forEach((c) => button.classList.add(c))
+            button.addEventListener('click', (e) => buttonSpec.action(e, this))
             dialog.querySelector('.dialog__buttons').appendChild(button)
         }
     }
