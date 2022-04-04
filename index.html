@@ -35,14 +35,6 @@
             </details>
         </template>
 
-        <template id="dialog_template">
-            <form class="dialog">
-                <p class="dialog__prompt">dialog prompt goes here</p>
-                <fieldset class="dialog__buttons">
-                </fieldset>
-            </form>
-        </template>
-
         <template id="retrospective_template">
             <section class="retrospective">
                 <details class="past_passages">
@@ -63,8 +55,10 @@
             </details>
         </template>
 
-        <template id="settings_overlay_template">
-            <form class="settings">
+        <template id="settings_template">
+            <modal-overlay>
+            <dialog-prompt>
+            <form slot="prompt" class="settings">
                 <fieldset class="settings__set metadata_set">
                     <!--legend>Metadata</legend-->
                     <label class="tag_editor__label">Tag Editor
@@ -73,10 +67,24 @@
                     <button class="button save_tags" type='button'>Save Tags</button>
                     <button class="button export_metadata" type='button'>Export Metadata</button>
                 </fieldset>
-                <fieldset class="settings__set controls_set">
-                    <button class="button close_settings" type='button'>Close</button>
-                </fieldset>
             </form>
+            
+            <button slot="buttons" class="button close_settings" type='button'>Close</button>
+            </dialog-prompt>
+            </modal-overlay>
+        </template>
+        
+        <template id="confirmation_template">
+            <modal-overlay>
+            <dialog-prompt>
+                <p class="confirm_prompt" slot="prompt">
+                    {filename} does not appear to be a Devious World or Devious Mundanity file.
+                </p>
+                
+                <button slot="buttons" class="button cancel dialog__button--suggested" type='button'>Cancel</button>
+                <button slot="buttons" class="button try_anyway" type='button'>Try Anyway</button>
+            </dialog-prompt>
+            </modal-overlay>
         </template>
 
         <!-- LANDING -->

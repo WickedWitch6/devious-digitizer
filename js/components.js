@@ -103,7 +103,10 @@ export class TabGroup extends HTMLElement {
         )
         this.shadowRoot
             .querySelector('slot')
-            .addEventListener('slotchange', e => this.tabs(e.target.assignedElements().filter(x => x instanceof TabPanel)))
+            .addEventListener(
+                'slotchange',
+                e => this.tabs(e.target.assignedElements().filter(x => x instanceof TabPanel))
+            )
     }
 
     static get observedAttributes() { return ['active']; }
@@ -152,62 +155,56 @@ export class TagList extends HTMLUListElement {
     )
 }
 
+export class ModalOverlay extends HTMLElement {
+    constructor() {
+        super()
+        this.attachShadow({mode: 'open'})
+        this.shadowRoot.append(
+            el('style', null, `
+                #overlay {
+                    display: flex; flex-flow: column nowrap; justify-content: center;
+                    align-items: center;
 
-/// Other Components ///
+                    position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%;
+                    overflow: auto;
 
-export class Overlay {
-    constructor({classes = [], attributes = new Map(), action}, children = []) {
-        const overlay = document.createElement('div')
-
-        //add classes
-        classes.forEach(cl => overlay.classList.add(cl))
-        overlay.classList.add('overlay')
-
-        // add attributes
-        for ([key, value] of attributes.entries()) {
-            overlay.setAttribute(key, value)
-        }
-
-        // add action for clicking overlay
-        if (action) {
-            overlay.addEventListener('click', (e) => {if (e.target === overlay) action(e, this)})
-        }
-
-        // listen for request to close
-        overlay.addEventListener('request_overlay_close', e => {e.stopPropagation(); this.close()})
-
-        // add children
-        children.forEach(el => el.classList.add('overlay__child'))
-        overlay.append(...children)
-
-        this._overlay = overlay
+                    background-color: var(--overlay-color, rgba(0,0,0,0.4));
+                }`
+            ),
+            el('div', {id: 'overlay'}, [el('slot')]),
+        )
+        this.addEventListener('request_overlay_close', e => {e.stopPropagation(); this.close()})
     }
-
+    
     static closeRequest = new Event('request_overlay_close', {bubbles:true, cancelable:true})
 
     open(parent) {
         parent.appendChild(this._overlay)
     }
-
-    close() {
-        this._overlay.remove()
-    }
+    
+    close() { this.remove() }
 }
 
-export class Dialog {
-    constructor(promptText, buttons) {
-        const dialog = cloneTemplate('dialog_template')
-        this._dialog = dialog.querySelector('.dialog')
+export class DialogPrompt extends HTMLElement {
+    constructor() {
+        super()
+        this.attachShadow({mode: 'open'})
+        this.shadowRoot.append(
+            el('style', null, `
+                #dialog {
+                    background-color: var(--dialog-color, grey); padding: 2em; max-width: 40em;
+                    border: var(--dialog-border); border-radius: var(--dialog-border-radius);
+                }
 
-        dialog.querySelector('.dialog__prompt').innerText = promptText
-
-        for (const buttonSpec of buttons) {
-            const button = document.createElement('button')
-            button.setAttribute('type', 'button')
-            button.innerText = buttonSpec.text;
-            ['button','dialog__button'].concat(buttonSpec.classes ?? []).forEach((c) => button.classList.add(c))
-            button.addEventListener('click', (e) => buttonSpec.action(e, this))
-            dialog.querySelector('.dialog__buttons').appendChild(button)
-        }
+                #buttons {
+                    display: flex; flex-flow: row wrap; justify-content: space-around;
+                    align-items: center; align-content: space-around; border: none;
+                }`
+            ),
+            el('form', {id: 'dialog', onsubmit: _ => false}, [
+                el('slot', {name: 'prompt'}),
+                el('fieldset', {id: 'buttons'}, [el('slot', {name: 'buttons'})])
+            ]),
+        )
     }
 }

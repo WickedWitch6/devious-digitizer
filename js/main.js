@@ -1,8 +1,9 @@
 import { el } from 'attodom'
 const createGraph = require('ngraph.graph')
-import { ClosingDetails, TabPanel, TabGroup, TagList, Overlay, Dialog } from './components.js'
-import { err, zip, equal, arrayUnique, filterObjectByKey, Tree, bfsTree, cloneTemplateFrom,
-         parseDoc, exportObject } from './utilities.js'
+import { ClosingDetails, TabPanel, TabGroup, TagList, ModalOverlay, DialogPrompt
+          } from './components.js'
+import { err, zip, equal, arrayUnique, filterObjectByKey, substituteText, Tree, bfsTree,
+          cloneTemplateFrom, parseDoc, exportObject } from './utilities.js'
 
 const cloneTemplate = cloneTemplateFrom(document)
 
@@ -10,6 +11,8 @@ customElements.define('closing-details', ClosingDetails, {extends: 'details'})
 customElements.define('tab-panel', TabPanel)
 customElements.define('tab-group', TabGroup)
 customElements.define('tag-list', TagList, {extends: 'ul'})
+customElements.define('modal-overlay', ModalOverlay)
+customElements.define('dialog-prompt', DialogPrompt)
 
 document.getElementById('file_select').addEventListener('change', e => switchToStory(e.target.files[0]))
 
@@ -32,24 +35,50 @@ document.body.addEventListener('drop', e => {
 
 /// TEMPLATES ///
 
-class SettingsDialog {
-    constructor(curr, routeTree, closeAction) {
-        const dialog = cloneTemplate('settings_overlay_template')
-        this._dialog = dialog.querySelector('.settings')
+function settings(curr, routeTree) {
+    const template = cloneTemplate('settings_template')
 
-        dialog.querySelector('.export_metadata').addEventListener('click', _ =>
-            exportObject(extractMetadata(routeTree), 'metadata.json'))
-
-        dialog.querySelector('.close_settings').addEventListener('click', e => closeAction(e, this))
-
-        const tagEditor = dialog.querySelector('.tag_editor')
-        tagEditor.value = gatherTags(curr, routeTree).join(' ')
-
-        dialog.querySelector('.save_tags').addEventListener('click', _ => {
-            const psg = routeTree.get(curr)
-            if (psg) psg.tags = tagEditor.value.split(' ')
-        })
+    const close = e => {
+        if (e.target == e.currentTarget) e.target.dispatchEvent(ModalOverlay.closeRequest)
     }
+    template.querySelector('modal-overlay').addEventListener('click', close)
+    template.querySelector('.close_settings').addEventListener('click', close)
+
+    const tagEditor = template.querySelector('.tag_editor')
+    tagEditor.value = gatherTags(curr, routeTree).join(' ')
+
+    template.querySelector('.save_tags').addEventListener('click', _ => {
+        const psg = routeTree.get(curr)
+        if (psg) psg.tags = tagEditor.value.split(' ')
+    })
+
+    template.querySelector('.export_metadata').addEventListener('click', _ =>
+        exportObject(extractMetadata(routeTree), 'metadata.json'))
+
+    return template
+}
+
+// modal prompt: "file does not appear to be a Devious World or Devious Mundanity file".
+//      options: cancel (return false), try anyway (return true), clicking away is same as cancel
+async function askToConfirm(filename) {
+    return new Promise((res, rej) => {
+        const respond = response => e => {
+            if (e.target == e.currentTarget) {
+                e.target.dispatchEvent(ModalOverlay.closeRequest)
+                res(response)
+            }
+        }
+        
+        const template = cloneTemplate('confirmation_template')
+        
+        const prompt = template.querySelector('.confirm_prompt')
+        prompt.textContent = substituteText(prompt.textContent, {filename})
+        template.querySelector('modal-overlay').addEventListener('click', respond(false))
+        template.querySelector('.cancel').addEventListener('click', respond(false))
+        template.querySelector('.try_anyway').addEventListener('click', respond(true))
+        
+        document.body.append(template)
+    })
 }
 
 function retrospective(curr, routeTree, tale) {
@@ -117,9 +146,8 @@ async function switchToStory(file) {
     // is document one of DW or DM?
     if (!storyDoc.querySelector('#storeArea > [tiddler = "CharGenMain"]')) {
         const confirmContinue = await askToConfirm(file.name)
-        if (!confirmContinue) {
-            return
-    }}
+        if (!confirmContinue) return;
+    }
 
     hideLanding()
     loadDocIntoDom(storyDoc)
@@ -128,26 +156,6 @@ async function switchToStory(file) {
 
 function hideLanding() {
     document.querySelector('.digitizer-landing').classList.add('digitizer-landing--inactive')
-}
-
-// modal prompt: "file does not appear to be a Devious World or Devious Mundanity file".
-//      options: cancel (return false), try anyway (return true), clicking away is same as cancel
-async function askToConfirm(filename) {
-    return new Promise((res, rej) => {
-        const respond = response => (e, self) => {
-            self._dialog.dispatchEvent(Overlay.closeRequest)
-            res(response)
-        }
-
-        new Overlay({action: respond(false)}, [
-            new Dialog(
-                `${filename} does not appear to be a Devious World or Devious Mundanity file.`,
-                [
-                    {text:'Cancel', action: respond(false), classes: ['dialog__button--suggested']},
-                    {text:'Try Anyway', action: respond(true)},
-                ])._dialog]
-        ).open(document.body)
-    })
 }
 
 function loadDocIntoDom(doc) {
@@ -230,15 +238,13 @@ async function injectDigitizerFeatures () {
     )
 
     // Add sidebar links //
-    const settingsLink = el('li', null, el('a', {onclick: _ => showSettings(state.history[0].passage.title, routeTree)}, 'Digitizer Settings'))
+    const settingsLink = el('li', null,
+        el('a',
+            {onclick: _ => document.body.append(settings(state.history[0].passage.title, routeTree))},
+            'Digitizer Settings'
+        )
+    )
     document.getElementById('sidebar').append(settingsLink)
-}
-
-function showSettings(curr, routeTree) {
-    const closeAction = (_, self) => self._dialog.dispatchEvent(Overlay.closeRequest)
-    new Overlay({action: closeAction},
-        [(new SettingsDialog(curr, routeTree, closeAction))._dialog]
-    ).open(document.body)
 }
 
 const getLinks = body =>

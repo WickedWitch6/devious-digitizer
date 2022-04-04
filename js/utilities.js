@@ -32,6 +32,9 @@ export function filterObjectByKey(obj, pred) {
     return filterObjectByEntry(obj, ([key, _]) => pred(key))
 }
 
+export const substituteText =
+    (template, context) => template.replaceAll(/{(\w+)}/g, (match, key) => context[key] ?? match)
+
 export class Tree extends Map {
     constructor(root, attributes = {}) {
         super()
