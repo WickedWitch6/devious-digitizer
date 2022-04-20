@@ -8,6 +8,7 @@
         --secondary-color: #326195; /* #682ED4 */
         --secondary-highlight: #4d6ad8; /* #18bfef */
         --secondary-dim: #29294a;
+        --max-width: 72rem;
     }
 
 
@@ -64,12 +65,12 @@
         padding: 0;
     }
 
-    input, select, textarea {
-        -moz-appearance: none;
-        -webkit-appearance: none;
-        -ms-appearance: none;
-        appearance: none;
-    }
+    /* input, select, textarea { */
+        /* -moz-appearance: none; */
+        /* -webkit-appearance: none; */
+        /* -ms-appearance: none; */
+        /* appearance: none; */
+    /* } */
 
     @-ms-viewport {
         width: device-width;
@@ -235,52 +236,9 @@
     }
 
 
+/*********************/
 /* Devious Digitizer */
-    body {
-        background-color: var(--bkg-color);
-    }
-
-    p {
-        margin-top: 0.5em;
-        margin-bottom: 0.5em;
-    }
-
-    .subtitle {
-        margin-bottom: 1em;
-    }
-
-    .standout-box {
-        display: flex;
-        justify-content: space-between;
-        flex-flow: column nowrap;
-        align-items: center;
-
-        background-color: var(--primary-color);
-
-        max-width: 72rem;
-
-        border-radius: 1em;
-
-        margin: 1em;
-
-        padding: 1em;
-    }
-
-    .standout-box--big {
-        margin: 2em;
-        padding: 2em;
-    }
-
-    .standout-box--small {
-        margin: .5em;
-        padding:.5em;
-        background-color: var(--primary-dim);
-    }
-
-    .standout-box__text {
-        font-weight: 900;
-    }
-
+/*********************/
     .button {
         background-color: var(--secondary-color);
         border-radius: .3em;
@@ -318,6 +276,63 @@
         height: 1em;
         margin: .3em;
     }
+    
+    .visually-hidden {
+        clip: rect(0 0 0 0);
+        clip-path: inset(50%);
+        height: 1px;
+        overflow: hidden;
+        position: absolute;
+        white-space: nowrap;
+        width: 1px;
+    }
+
+    /* Landing */
+    /***********/
+    body {
+        background-color: var(--bkg-color);
+    }
+
+    p {
+        margin-top: 0.5em;
+        margin-bottom: 0.5em;
+    }
+
+    .subtitle {
+        margin-bottom: 1em;
+    }
+
+    .standout-box {
+        display: flex;
+        justify-content: space-between;
+        flex-flow: column nowrap;
+        align-items: center;
+
+        background-color: var(--primary-color);
+
+        max-width: var(--max-width);
+
+        border-radius: 1em;
+
+        margin: 1em;
+
+        padding: 1em;
+    }
+
+    .standout-box--big {
+        margin: 2em;
+        padding: 2em;
+    }
+
+    .standout-box--small {
+        margin: .5em;
+        padding:.5em;
+        background-color: var(--primary-dim);
+    }
+
+    .standout-box__text {
+        font-weight: 900;
+    }
 
     .digitizer-landing {
         display: flex;
@@ -335,26 +350,14 @@
         margin-bottom: .5em;
     }
 
-    .visually-hidden {
-        clip: rect(0 0 0 0);
-        clip-path: inset(50%);
-        height: 1px;
-        overflow: hidden;
-        position: absolute;
-        white-space: nowrap;
-        width: 1px;
-    }
-
-    tab-group {
-        --tab-background: var(--primary-dim);
-        --tab-active-background: var(--primary-color);
-    }
-
-    /* TODO add rule to hide .tag_viewer when "hide features" button is pressed (look for class on passages element?)
+    /* TODO add rule to hide tag viewers and retrospective when "hide features" button is pressed (look for class on passages element?)
     #passages.hide_digitizer .tag_viewer {
         display: none;
     }
     */
+
+    /* Retrospective */
+    /*****************/
 
     .retrospective {
         font: normal 16px "Georgia", "Book Antiqua", Georgia, serif;
@@ -398,6 +401,9 @@
     .past_passage__summary {
         cursor: pointer;
     }
+
+    /* Tag Viewers */
+    /***************/
 
     .tag_viewer__summary {
         height: 1em;
@@ -443,6 +449,20 @@
         border-bottom: 0;
     }
 
+    .tag_viewer__tab_group {
+        --tab-background: var(--primary-dim);
+        --tab-active-background: var(--primary-color);
+        --tab-cursor: pointer;
+        --tab-padding: .5em;
+        --tab-border-width: 0 1px 1px 1px;
+        --tab-border-style: solid;
+        --tab-border-color: var(--tab-background);
+        --tab-border-radius: 0 0 .3em .3em;
+        line-height: unset;
+        font-weight: unset;
+        font-style: unset;
+        color: var(--text-color);
+    }
 
     /* override Twine's styling of unordered lists */
     .passage ul.tag_list {
@@ -463,6 +483,9 @@
         margin-right: .3em;
     }
 
+    /* Dialogs */
+    /***********/
+
     dialog-prompt {
         --dialog-color: var(--primary-color);
         --dialog-border: 1px solid var(--primary-dim);
@@ -474,12 +497,15 @@
         font-weight: bold;
     }
 
+    /* Settings Dialog */
+    /*******************/
+    
     .settings {
         display: flex;
         flex-flow: column nowrap;
 
         background-color: var(--primary-color);
-        max-width: 70em;
+        max-width: var(--max-width);
     }
 
     .settings__set {
@@ -497,8 +523,51 @@
         flex-direction: column;
         grid-column: 1/5;
     }
+    
+    /* Feedback Dialog */
+    /*******************/
+    
+    .feedback {
+        background-color: var(--primary-color);
+        padding: .5rem;
+        max-width: var(--max-width);
+    }
+    
+    .feedback__dialog {
+        --dialog-padding: .5rem;
+    }
+    
+    .feedback__tab_group {
+        --tabs-position: column-reverse;
+        --tab-background: var(--primary-dim);
+        --tab-active-background: var(--primary-color);
+        --tab-cursor: pointer;
+        --tab-padding: .5em;
+    }
+    
+    .feedback__tab_panel {
+        padding: 1rem;
+    }
 
+    .feedback__form {
+        display: flex;
+        flex-flow: column nowrap;
+        align-items: flex-start;
+        gap: 1em;
+    }
+    
+    .longform_feedback {
+        width: 100%;
+        height: 5em;
+    }
+    
+    .shortform_feedback {
+        min-width: 17em;
+    }
+
+/*********************/
 /* Twine enhancement */
+/*********************/
     #sidebar {
         max-height: 100%;
         overflow-y: auto;

@@ -81,6 +81,18 @@ async function askToConfirm(filename) {
     })
 }
 
+function feedback() {
+    const template = cloneTemplate('feedback_template')
+
+    const close = e => {
+        if (e.target == e.currentTarget) e.target.dispatchEvent(ModalOverlay.closeRequest)
+    }
+    template.querySelector('modal-overlay').addEventListener('click', close)
+    template.querySelector('.close_feedback').addEventListener('click', close)
+    
+    return template
+}
+
 function retrospective(curr, routeTree, tale) {
     const template = cloneTemplate('retrospective_template')
 
@@ -244,7 +256,12 @@ async function injectDigitizerFeatures () {
             'Digitizer Settings'
         )
     )
-    document.getElementById('sidebar').append(settingsLink)
+    const feedbackLink = el('li', null, el('a', {onclick: _ => showFeedback()}, 'Digitizer Feedback'))
+    document.getElementById('sidebar').append(settingsLink, feedbackLink)
+}
+
+function showFeedback() {
+    document.body.append(feedback())
 }
 
 const getLinks = body =>

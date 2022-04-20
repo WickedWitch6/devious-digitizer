@@ -87,6 +87,78 @@
             </modal-overlay>
         </template>
 
+        <template id="feedback_template">
+            <modal-overlay class="feedback__overlay">
+            <dialog-prompt class="feedback__dialog">
+            <div class="feedback" slot="prompt">
+                <h2>Feedback</h2>
+                <p>Choose a type of feedback form below</p>
+                <tab-group class="feedback__tab_group">
+                    <tab-panel class="feedback__tab_panel" title="Bug Report">
+                        <form class="bug_report feedback__form">
+                            <label class="">Please describe the problem
+                                <textarea class="longform_feedback" name="description" required></textarea>
+                            </label>
+                            <label class="">Your email (optional)
+                                <input type="email" class="shortform_feedback" name="followup_email"></input>
+                            </label>
+                            <p>By default, some anonymous information about your browser and session are sent with the report to help with solving your issue. Below, you can view what information would be included and choose whether or not to include it.</p>
+                            <label class=""><input type="checkbox" class="" name="include_debug_info" checked>
+                                Include debug information in report</input>
+                            </label>
+                            <details class="">
+                                <summary class="">Debug Info</summary>
+                                <pre class="debug_info bug_report__debug_info"></pre>
+                            </details>
+                            <button class="button" name="submit">Submit</button>
+                        </form>
+                    </tab-panel>
+                    <tab-panel class="feedback__tab_panel" title="Feature Request">
+                        <form class="feature_request feedback__form">
+                            <label class="">How might Devious Digitizer be improved?
+                                <textarea class="longform_feedback" name="description" required></textarea>
+                            </label>
+                            <label class="">Your email (optional)
+                                <input type="email" class="shortform_feedback" name="followup_email"></input>
+                            </label>
+                            <button class="button" name="submit">Submit</button>
+                        </form>
+                    </tab-panel>
+                    <tab-panel class="feedback__tab_panel" title="Question or Help">
+                        <form class="help_request feedback__form">
+                            <label class="">What do you need help with?
+                                <textarea class="longform_feedback" name="description" required></textarea>
+                            </label>
+                            <label class="">Your email
+                                <input type="email" class="shortform_feedback" name="followup_email" required></input>
+                            </label>
+                            <button class="button" name="submit">Submit</button>
+                        </form>
+                    </tab-panel>
+                    <tab-panel class="feedback__tab_panel" title="Submit Tags">
+                        <form name="submit_tags feedback__form">
+                            <label class="">Comments (optional)
+                                <textarea class="longform_feedback" name="description"></textarea>
+                            </label>
+                            <label class="">Your email (optional)
+                                <input type="email" class="shortform_feedback" name="followup_email"></input>
+                            </label>
+                            <p>Below, you can view the tag changes that will be sent to the Wicked Witch (DD's developer (me)) </p>
+                            <details class="">
+                                <summary class="">Tag Changes</summary>
+                                <pre class="tag_changes submit_tags__tag_changes"></pre>
+                            </details>
+                            <button class="button" name="submit">Submit</button>
+                        </form>
+                    </tab-panel>
+                </tab-group>
+            </div>
+            
+            <button class="button close_feedback" slot="buttons">Close</button>
+            </dialog-prompt>
+            </modal-overlay>
+        </template>
+
         <!-- LANDING -->
 
         <section class="digitizer-landing">
