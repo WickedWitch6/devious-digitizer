@@ -59,9 +59,11 @@ function settings(curr, routeTree) {
 
     template.querySelector('.save_tags').addEventListener('click', _ => {
         const psg = routeTree.get(curr)
-        if (psg) psg.tags = tagEditor.value.split(' ')
+        if (psg) psg.modifiedTags = tagEditor.value.split(' ')
         document.body.append(toast("tags saved!", 2))
     })
+
+    // TODO? Add "revert tags" button
 
     template.querySelector('.export_metadata').addEventListener('click', _ =>
         exportObject(extractMetadata(routeTree), 'metadata.json'))
@@ -150,15 +152,28 @@ function inlineTagViewer(passageTags, routeTags) {
 /// Devious Digitizer ///
 
 function gatherTags(title, routeTree, recursive = false) {
-    if (!recursive) return routeTree.get(title)?.tags ?? []
+    if (!recursive) return routeTree.get(title)?.modifiedTags ?? routeTree.get(title)?.tags ?? []
     return arrayUnique(
         Tree.cata(
             routeTree,
             title,
-            node => (node.tags ?? []).concat(...node.children)
+            node => (node.modifiedTags ?? node.tags ?? []).concat(...node.children)
         )
     )
         // arrayUnique([...(node.tags ?? []), ...node.children.flatMap(child => gatherTags(child, routeTree, true))])
+}
+
+
+function gatherTagChanges(routeTree) {
+    return JSON.stringify(
+        Object.fromEntries(
+            [...routeTree]
+            .filter(([k,v]) => v.hasOwnProperty('modifiedTags'))
+            .map(([k,v]) => [k, v.modifiedTags])
+        ),
+        null,
+        2,
+    )
 }
 
 async function switchToStory(file) {
