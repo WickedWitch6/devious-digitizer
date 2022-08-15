@@ -6,7 +6,7 @@
 
 import { el } from 'attodom'
 import { nanoid } from 'nanoid'
-import { pipe, setClass, } from './utilities.js'
+import { pipe, setClass, sleep } from './utilities.js'
 
 import flyd from 'flyd'
 import { dropRepeats } from 'flyd/module/droprepeats'
