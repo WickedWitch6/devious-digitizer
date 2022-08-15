@@ -45,6 +45,17 @@ function toast(text, lingerTime = 3, fadeTime = 1) {
     return toast
 }
 
+function sidebarMenu(tale, state, routeTree, userAgent) {
+    const template = cloneTemplate('sidebar_menu_template')
+
+    template.querySelector('.settings_link').addEventListener(
+        'click',
+        _ => document.body.append(settings(state.history[0].passage.title, routeTree))
+    )
+
+    return template
+}
+
 function settings(curr, routeTree) {
     const template = cloneTemplate('settings_template')
 
@@ -276,18 +287,7 @@ async function injectDigitizerFeatures () {
     )
 
     // Add sidebar links //
-    const settingsLink = el('li', null,
-        el('a',
-            {onclick: _ => document.body.append(settings(state.history[0].passage.title, routeTree))},
-            'Digitizer Settings'
-        )
-    )
-    const feedbackLink = el('li', null, el('a', {onclick: _ => showFeedback()}, 'Digitizer Feedback'))
-    document.getElementById('sidebar').append(settingsLink, feedbackLink)
-}
-
-function showFeedback() {
-    document.body.append(feedback())
+    document.getElementById('sidebar').append(sidebarMenu(tale, state, routeTree, navigator.userAgent))
 }
 
 const getLinks = body =>

@@ -356,6 +356,17 @@
     }
     */
 
+    /* Sidebar Menu */
+    /****************/
+    
+    .sidebar_menu {
+        padding-top: 1em;
+    }
+    
+    .sidebar_menu__title {
+        font-weight: normal;
+    }
+
     /* Retrospective */
     /*****************/
 
