@@ -6,9 +6,10 @@ export const setClass = (elem, cl, bool) => bool ? elem.classList.add(cl) : elem
 
 export const err = (...args) => {throw new Error(...args)}
 
-export const flow = (x, ...fns) => fns.reduce((acc, fn) => fn(acc), x)
 
-export const pipe = (...fns) => x => fns.reduce((acc, fn) => fn(acc), x)
+export const pipe = (x, ...fns) => fns.reduce((acc, fn) => fn(acc), x)
+
+export const flow = (...fns) => x => fns.reduce((acc, fn) => fn(acc), x)
 
 export const zip = rows => rows[0].map( (_,c) => rows.map( row => row[c] ))
 
@@ -142,3 +143,5 @@ export function parseDoc(docText) {
 export function exportObject(obj, filename) {
     saveAs(new Blob([JSON.stringify(obj)], {type: 'application/json'}), filename)
 }
+
+\ No newline at end of file

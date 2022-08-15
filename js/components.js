@@ -6,7 +6,7 @@
 
 import { el } from 'attodom'
 import { nanoid } from 'nanoid'
-import { flow, setClass, cloneTemplateFrom } from './utilities.js'
+import { pipe, setClass, } from './utilities.js'
 
 import flyd from 'flyd'
 import { dropRepeats } from 'flyd/module/droprepeats'
@@ -16,10 +16,7 @@ const update = (s, fn) => s(fn(s()))
 //const sideEffect = flyd.curryN(2, (fn, s) => flyd.map(x => {fn(x); return x;}, s))
 
 
-// TODO this file should not be using the global document variable
-const cloneTemplate = cloneTemplateFrom(document)
-
-const updateAttribute = (srm, attr, obj) => flow(
+const updateAttribute = (srm, attr, obj) => pipe(
     srm,
     dropRepeats,
     flyd.on(x => obj.getAttribute(attr) === x ? null : obj.setAttribute(attr, x))
