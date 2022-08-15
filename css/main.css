@@ -483,6 +483,16 @@
         margin-right: .3em;
     }
 
+    /* Toasts */
+    /**********/
+
+    toast-box {
+        --toast-color: var(--primary-color);
+        --toast-padding: 1rem;
+        --toast-border: 1px solid var(--primary-dim);
+        --toast-border-radius: .5rem;
+    }
+
     /* Dialogs */
     /***********/
 

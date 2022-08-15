@@ -1,6 +1,6 @@
 import { el } from 'attodom'
 const createGraph = require('ngraph.graph')
-import { ClosingDetails, TabPanel, TabGroup, TagList, ModalOverlay, DialogPrompt
+import { ClosingDetails, TabPanel, TabGroup, TagList, ModalOverlay, DialogPrompt, Toast,
           } from './components.js'
 import { err, zip, equal, arrayUnique, filterObjectByKey, substituteText, Tree, bfsTree,
           cloneTemplateFrom, parseDoc, exportObject } from './utilities.js'
@@ -13,6 +13,7 @@ customElements.define('tab-group', TabGroup)
 customElements.define('tag-list', TagList, {extends: 'ul'})
 customElements.define('modal-overlay', ModalOverlay)
 customElements.define('dialog-prompt', DialogPrompt)
+customElements.define('toast-box', Toast)
 
 document.getElementById('file_select').addEventListener('change', e => switchToStory(e.target.files[0]))
 
@@ -34,6 +35,15 @@ document.body.addEventListener('drop', e => {
 
 
 /// TEMPLATES ///
+
+// FIX fadeTime is unimplemented
+function toast(text, lingerTime = 3, fadeTime = 1) {
+    const toast = document.createElement('toast-box')
+    toast.setAttribute('text', text)
+    toast.setAttribute('linger-time', lingerTime)
+    //toast.setAttribute('fade-time', fadeTime)
+    return toast
+}
 
 function settings(curr, routeTree) {
     const template = cloneTemplate('settings_template')

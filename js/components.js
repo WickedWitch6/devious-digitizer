@@ -209,3 +209,41 @@ export class DialogPrompt extends HTMLElement {
         )
     }
 }
+
+export class Toast extends HTMLElement {
+    constructor() {
+        super()
+        this.attachShadow({mode: 'open'})
+        this.shadowRoot.append(
+            el('style', null, `
+                @keyframes fadeOut {
+                    from {opacity: 1;}
+                    to {opacity: 0;}
+                }
+                
+                #toast {
+                    background-color: var(--toast-color, grey); padding: var(--toast-padding, 2em);
+                    border: var(--toast-border); border-radius: var(--toast-border-radius);
+                    position: fixed; z-index: 1; left: 50%; bottom: 25%; transform: -50%;
+                }
+                
+                #toast.fade {
+                    animation: fadeOut 1s ease-in;
+                }` // TODO make fade out time customizable
+            ),
+            el('p', {id:'toast'}),
+        )
+        
+        this.shadowRoot.getElementById('toast').addEventListener(
+            'animationend',
+            e => {if (e.animationName === 'fadeOut') this.remove()}
+        )
+    }
+    
+    connectedCallback() {
+        const toast = this.shadowRoot.getElementById('toast')
+        toast.textContent = this.getAttribute('text')
+        sleep(Number(this.getAttribute('linger-time')) * 1000)
+            .then(_ => toast.classList.add('fade'))
+    }
+}
