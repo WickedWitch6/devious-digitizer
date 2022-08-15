@@ -55,6 +55,19 @@
             </details>
         </template>
 
+        <template id="confirmation_template">
+            <modal-overlay>
+            <dialog-prompt>
+                <p class="confirm_prompt" slot="prompt">
+                    {filename} does not appear to be a Devious World or Devious Mundanity file.
+                </p>
+
+                <button slot="buttons" class="button cancel dialog__button--suggested" type='button'>Cancel</button>
+                <button slot="buttons" class="button try_anyway" type='button'>Try Anyway</button>
+            </dialog-prompt>
+            </modal-overlay>
+        </template>
+
         <template id="sidebar_menu_template">
             <li class="sidebar_menu">
                 <p class="sidebar_menu__title">Devious Digitizer</p>
@@ -78,19 +91,6 @@
             </form>
 
             <button slot="buttons" class="button close_settings" type='button'>Close</button>
-            </dialog-prompt>
-            </modal-overlay>
-        </template>
-        
-        <template id="confirmation_template">
-            <modal-overlay>
-            <dialog-prompt>
-                <p class="confirm_prompt" slot="prompt">
-                    {filename} does not appear to be a Devious World or Devious Mundanity file.
-                </p>
-                
-                <button slot="buttons" class="button cancel dialog__button--suggested" type='button'>Cancel</button>
-                <button slot="buttons" class="button try_anyway" type='button'>Try Anyway</button>
             </dialog-prompt>
             </modal-overlay>
         </template>

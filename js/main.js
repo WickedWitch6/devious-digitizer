@@ -45,6 +45,29 @@ function toast(text, lingerTime = 3, fadeTime = 1) {
     return toast
 }
 
+// modal prompt: "file does not appear to be a Devious World or Devious Mundanity file".
+//      options: cancel (return false), try anyway (return true), clicking away is same as cancel
+async function askToConfirm(filename) {
+    return new Promise((res, rej) => {
+        const respond = response => e => {
+            if (e.target == e.currentTarget) {
+                e.target.dispatchEvent(ModalOverlay.closeRequest)
+                res(response)
+            }
+        }
+
+        const template = cloneTemplate('confirmation_template')
+
+        const prompt = template.querySelector('.confirm_prompt')
+        prompt.textContent = substituteText(prompt.textContent, {filename})
+        template.querySelector('modal-overlay').addEventListener('click', respond(false))
+        template.querySelector('.cancel').addEventListener('click', respond(false))
+        template.querySelector('.try_anyway').addEventListener('click', respond(true))
+
+        document.body.append(template)
+    })
+}
+
 function sidebarMenu(tale, state, routeTree, userAgent) {
     const template = cloneTemplate('sidebar_menu_template')
 
@@ -82,27 +105,9 @@ function settings(curr, routeTree) {
     return template
 }
 
-// modal prompt: "file does not appear to be a Devious World or Devious Mundanity file".
-//      options: cancel (return false), try anyway (return true), clicking away is same as cancel
-async function askToConfirm(filename) {
-    return new Promise((res, rej) => {
-        const respond = response => e => {
-            if (e.target == e.currentTarget) {
-                e.target.dispatchEvent(ModalOverlay.closeRequest)
-                res(response)
-            }
-        }
         
-        const template = cloneTemplate('confirmation_template')
         
-        const prompt = template.querySelector('.confirm_prompt')
-        prompt.textContent = substituteText(prompt.textContent, {filename})
-        template.querySelector('modal-overlay').addEventListener('click', respond(false))
-        template.querySelector('.cancel').addEventListener('click', respond(false))
-        template.querySelector('.try_anyway').addEventListener('click', respond(true))
         
-        document.body.append(template)
-    })
 }
 
 function feedback() {
