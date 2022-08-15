@@ -60,6 +60,7 @@ function settings(curr, routeTree) {
     template.querySelector('.save_tags').addEventListener('click', _ => {
         const psg = routeTree.get(curr)
         if (psg) psg.tags = tagEditor.value.split(' ')
+        document.body.append(toast("tags saved!", 2))
     })
 
     template.querySelector('.export_metadata').addEventListener('click', _ =>
