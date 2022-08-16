@@ -27,7 +27,8 @@
     "file-saver": "^2.0.5",
     "flyd": "^0.2.8",
     "nanoid": "^3.2.0",
-    "ngraph.graph": "^19.1.0"
+    "ngraph.graph": "^19.1.0",
+    "openpgp": "^5.3.1"
   },
   "staticFiles": {
     "staticPath": "data",

@@ -1,4 +1,5 @@
 import { saveAs } from 'file-saver'
+import { readKey, encrypt, createMessage } from 'openpgp'
 
 export const equal = (x, y) => x === y
 
@@ -6,6 +7,7 @@ export const setClass = (elem, cl, bool) => bool ? elem.classList.add(cl) : elem
 
 export const err = (...args) => {throw new Error(...args)}
 
+export const sleep = ms => new Promise(res => setTimeout(res, ms))
 
 export const pipe = (x, ...fns) => fns.reduce((acc, fn) => fn(acc), x)
 
@@ -144,4 +146,9 @@ export function exportObject(obj, filename) {
     saveAs(new Blob([JSON.stringify(obj)], {type: 'application/json'}), filename)
 }
 
-\ No newline at end of file
+export async function encryptMessage(armoredPublicKey, text) {
+    return await encrypt({
+        message: await createMessage({text}),
+        encryptionKeys: await readKey({armoredKey: armoredPublicKey})
+    })
+}
