@@ -84,6 +84,11 @@ function sidebarMenu(tale, state, routeTree, userAgent) {
         _ => document.body.append(feedback(tale, state, routeTree, userAgent))
     )
 
+    template.querySelector('.privacy_link').addEventListener(
+        'click',
+        _ => document.body.append(privacy())
+    )
+
     return template
 }
 
@@ -193,6 +198,14 @@ function feedbackPreview(subject, body, form) {
     return template
 }
 
+function privacy() {
+    const template = cloneTemplate('privacy_template')
+    
+    const close = e => {
+        if (e.target == e.currentTarget) e.target.dispatchEvent(ModalOverlay.closeRequest)
+    }
+    template.querySelector('modal-overlay').addEventListener('click', close)
+    template.querySelector('.close_privacy').addEventListener('click', close)
     
     return template
 }

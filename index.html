@@ -73,6 +73,7 @@
                 <p class="sidebar_menu__title">Devious Digitizer</p>
                 <p><a class="settings_link">Settings</a></p>
                 <p><a class="feedback_link">Feedback</a></p>
+                <p><a class="privacy_link">Privacy</a></p>
             </li>
         </template>
 
@@ -193,6 +194,28 @@
             </modal-overlay>
         </template>
         
+        <template id="privacy_template">
+            <modal-overlay>
+            <dialog-prompt>
+            <div slot="prompt" class="privacy">
+                <h1>Privacy</h1>
+                <p>A note on privacy within the Devious Digitizer (aka DD) app. This is for informational purposes only.</p>
+                <h2>Transmission</h2>
+                <p>Devious Digitizer does not currently collect any data, personal or aggregate. Github, the service hosting DD, receives some basic data like access time and IP address and may store this data.</p>
+                <p>I am considering a way to count daily site visits, mostly out of curiosity. (I wouldn't even know anybody had used DD if not for the couple users who have talked to me about it.) This would probably involve a call to the external service <a href="https://countapi.xyz/">CountAPI</a>.</p>
+                <h2>Storage</h2>
+                <p>Devious Digitizer does not currently store any data on your device longer than a session.</p>
+                <p>I am considering adding features that would store some longer-term data on your device, like preferences, favorite passages, previous searches, or even custom tag lists. DD will never transmit any of this information without explicit consent.</p>
+                <h2>Feedback</h2>
+                <p>Feedback is encrypted end-to-end and at-rest. I receive feedback in an encrypted email account through the third-party service <a href="https://formspree.io/">Formspree</a>. Since Formspree does not support encryption itself, the Devious Digitizer app PGP-encrypts all feedback before transmitting it.</p>
+                <p>All feedback is completely private and will only ever be seen by me, the Wicked Witch, with the exception of contributed passage tags, which of course I use to expand DD's publicly available tag lists. However, I may take action based on feedback or refer to non-personal information within feedback for the purpose of bettering DD, for example by fixing bugs or adding features.</p>
+                <p>I retain feedback messages to the best of my ability. I can send copies of past correspondence on request, but I can only share correspondence with the email address(es) associated with that correspondence, for obvious privacy reasons. Hence, I suggest adding an email address to most feedback in case you ever want a copy of it later.</p>
+            </div>
+
+            <button slot="buttons" class="button close_privacy" type='button'>Close</button>
+            </dialog-prompt>
+            </modal-overlay>
+        </template>
 
         <!-- LANDING -->
 
