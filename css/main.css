@@ -568,14 +568,20 @@
     
     .feedback__dialog {
         --dialog-padding: .5rem;
+        width: 95%;
+        max-width: 35rem;
     }
     
     .feedback__tab_group {
         --tabs-position: column-reverse;
         --tab-background: var(--primary-dim);
         --tab-active-background: var(--primary-color);
+        --tab-active-border-width: 3px 0;
+        --tab-active-border-style: solid;
+        --tab-active-border-color: var(--primary-dim);
         --tab-cursor: pointer;
         --tab-padding: .5em;
+        --tab-align: center;
     }
     
     .feedback__tab_panel {
@@ -585,7 +591,7 @@
     .feedback__form {
         display: flex;
         flex-flow: column nowrap;
-        align-items: flex-start;
+        align-items: stretch;
         gap: 1em;
     }
     
@@ -596,6 +602,60 @@
     
     .shortform_feedback {
         min-width: 17em;
+    }
+    
+    .feedback__dynamic_text {
+        color: white;
+        background-color: var(--secondary-dim);
+        width: 100%;
+        overflow-y: auto;
+    }
+    
+    .feedback__dynamic_text:disabled {
+        color: grey;
+    }
+
+    .feedback__submit {
+        align-self: flex-start;
+    }
+    
+    .bug_report__debug_info {
+        height: 7em;
+    }
+    
+    .submit_tags__tag_changes {
+        height: 7em;
+    }
+    
+    .debug_info__summary {
+        cursor: pointer;
+    }
+    
+    .tag_changes__summary {
+        cursor: pointer;
+    }
+    
+    /* Feedback Preview Dialog */
+    /***************************/
+    
+    .feedback_preview {
+        background-color: var(--primary-color);
+        padding: .5rem;
+        max-width: var(--max-width);
+    }
+    
+    .feedback_preview__dialog {
+        --dialog-padding: .5rem;
+        width: 90%;
+        max-width: 33rem;
+    }
+    
+    .feedback_preview__body {
+        background-color: var(--secondary-dim);
+        width: 100%;
+        height: auto;
+        max-height: 30rem;
+        overflow-y: auto;
     }
 
 /*********************/

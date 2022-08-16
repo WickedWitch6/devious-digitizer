@@ -72,6 +72,7 @@
             <li class="sidebar_menu">
                 <p class="sidebar_menu__title">Devious Digitizer</p>
                 <p><a class="settings_link">Settings</a></p>
+                <p><a class="feedback_link">Feedback</a></p>
             </li>
         </template>
 
@@ -111,14 +112,14 @@
                                 <input type="email" class="shortform_feedback" name="followup_email"></input>
                             </label>
                             <p>By default, some anonymous information about your browser and session are sent with the report to help with solving your issue. Below, you can view what information would be included and choose whether or not to include it.</p>
-                            <label class=""><input type="checkbox" class="" name="include_debug_info" checked>
+                            <label class=""><input type="checkbox" class="include_debug_info" name="include_debug_info" checked>
                                 Include debug information in report</input>
                             </label>
-                            <details class="">
-                                <summary class="">Debug Info</summary>
-                                <pre class="debug_info bug_report__debug_info"></pre>
+                            <details class="debug_info__details">
+                                <summary class="debug_info__summary">Debug Info</summary>
+                                <textarea readonly name="debug_info" class="feedback__dynamic_text debug_info bug_report__debug_info"></textarea>
                             </details>
-                            <button class="button" name="submit">Submit</button>
+                            <button class="button feedback__submit" name="submit">Submit</button>
                         </form>
                     </tab-panel>
                     <tab-panel class="feedback__tab_panel" title="Feature Request">
@@ -129,7 +130,7 @@
                             <label class="">Your email (optional)
                                 <input type="email" class="shortform_feedback" name="followup_email"></input>
                             </label>
-                            <button class="button" name="submit">Submit</button>
+                            <button class="button feedback__submit" name="submit">Submit</button>
                         </form>
                     </tab-panel>
                     <tab-panel class="feedback__tab_panel" title="Question or Help">
@@ -137,35 +138,61 @@
                             <label class="">What do you need help with?
                                 <textarea class="longform_feedback" name="description" required></textarea>
                             </label>
+                            <p>Please include an email address, so I have a way to contact you to help.</p>
                             <label class="">Your email
                                 <input type="email" class="shortform_feedback" name="followup_email" required></input>
                             </label>
-                            <button class="button" name="submit">Submit</button>
+                            <button class="button feedback__submit" name="submit">Submit</button>
                         </form>
                     </tab-panel>
                     <tab-panel class="feedback__tab_panel" title="Submit Tags">
-                        <form name="submit_tags feedback__form">
+                        <form class="submit_tags feedback__form" name="submit_tags">
                             <label class="">Comments (optional)
                                 <textarea class="longform_feedback" name="description"></textarea>
                             </label>
                             <label class="">Your email (optional)
                                 <input type="email" class="shortform_feedback" name="followup_email"></input>
                             </label>
-                            <p>Below, you can view the tag changes that will be sent to the Wicked Witch (DD's developer (me)) </p>
-                            <details class="">
-                                <summary class="">Tag Changes</summary>
-                                <pre class="tag_changes submit_tags__tag_changes"></pre>
+                            <label class="">Your name to display in the list of contributors (optional)
+                                <input type="text" class="shortform_feedback" name="attribution"></input>
+                            </label>
+                            <ul>
+                              <li>By contributing your tag annotations, you agree to release them as <a href="https://creativecommons.org/share-your-work/public-domain/cc0">CC0 (public domain)</a>.</li>
+                              <li>I may need to modify your contributed tags for consistency with existing tags. And all tags are liable to change as I work to refine the tag system.</li>
+                            </ul>
+                            <p>Below, you can view the tag changes that will be sent to the Wicked Witch (DD's developer (me))</p>
+                            <details class="tag_changes__details">
+                                <summary class="tag_changes__summary">Tag Changes</summary>
+                                <textarea readonly name="tag_changes" class="feedback__dynamic_text tag_changes submit_tags__tag_changes"></textarea>
                             </details>
-                            <button class="button" name="submit">Submit</button>
+                            <button class="button feedback__submit" name="submit">Submit</button>
                         </form>
                     </tab-panel>
                 </tab-group>
             </div>
-            
+
             <button class="button close_feedback" slot="buttons">Close</button>
             </dialog-prompt>
             </modal-overlay>
         </template>
+        
+        <template id="feedback_preview_template">
+            <modal-overlay class="feedback_preview__overlay">
+            <dialog-prompt class="feedback_preview__dialog">
+            <div class="feedback_preview" slot="prompt">
+                <h4>Subject (not encrypted)</h4>
+                <h5 class="feedback__dynamic_text subject"></h5>
+                
+                <h4>Body (will be encrypted)</h4>
+                <pre class="feedback__dynamic_text feedback_preview__body body"></pre>
+            </div>
+
+            <button class="button cancel" slot="buttons">Close</button>
+            <button class="button submit" slot="buttons">Submit</button>
+            </dialog-prompt>
+            </modal-overlay>
+        </template>
+        
 
         <!-- LANDING -->
 

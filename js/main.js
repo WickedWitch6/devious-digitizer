@@ -1,9 +1,12 @@
-import { el } from 'attodom'
+import { nanoid } from 'nanoid'
 const createGraph = require('ngraph.graph')
 import { ClosingDetails, TabPanel, TabGroup, TagList, ModalOverlay, DialogPrompt, Toast,
           } from './components.js'
 import { err, zip, equal, arrayUnique, filterObjectByKey, substituteText, Tree, bfsTree,
-          cloneTemplateFrom, parseDoc, exportObject } from './utilities.js'
+          cloneTemplateFrom, parseDoc, exportObject, encryptMessage } from './utilities.js'
+
+const OBFUSCATED_FORMSPREE_ENDPOINT = "aHR0cHM6Ly9mb3Jtc3ByZWUuaW8vZi9tYmp3cGRwdw=="
+const PUBLIC_KEY_URL = '/data/pubkey.asc'
 
 const cloneTemplate = cloneTemplateFrom(document)
 
@@ -76,6 +79,11 @@ function sidebarMenu(tale, state, routeTree, userAgent) {
         _ => document.body.append(settings(state.history[0].passage.title, routeTree))
     )
 
+    template.querySelector('.feedback_link').addEventListener(
+        'click',
+        _ => document.body.append(feedback(tale, state, routeTree, userAgent))
+    )
+
     return template
 }
 
@@ -105,12 +113,9 @@ function settings(curr, routeTree) {
     return template
 }
 
-        
-        
-        
-}
-
-function feedback() {
+// Caches form to make filled-in info persistent
+let feedbackForm
+function buildFeedback(routeTree) {
     const template = cloneTemplate('feedback_template')
 
     const close = e => {
@@ -118,6 +123,76 @@ function feedback() {
     }
     template.querySelector('modal-overlay').addEventListener('click', close)
     template.querySelector('.close_feedback').addEventListener('click', close)
+    
+    // give a visual indicator that debug_info is being disabled
+    const debugInfo = template.querySelector('.debug_info')
+    const includeDebugInfo = template.querySelector('.include_debug_info')
+    includeDebugInfo.addEventListener('change', _ => {debugInfo.disabled = !includeDebugInfo.checked})
+    
+    const submit = type => e => {
+        e.preventDefault()
+        
+        const feedbackID = `${type}-${nanoid(6)}`
+        
+        // disable debug info when requested so it is not included in BUG feedback messages
+        debugInfo.disabled = !includeDebugInfo.checked
+        
+        const data = new FormData(e.target)
+        data.append('id', feedbackID)
+        
+        const subject = `Devious Digitizer Feedback ${feedbackID}`
+        const body = [...data.entries()].map(([k, v]) => `${k}: ${v}`).join('\n\n')
+        
+        document.body.append(feedbackPreview(subject, body, e.target))
+    }
+    template.querySelector('.bug_report').addEventListener('submit', submit('BUG'))
+    template.querySelector('.feature_request').addEventListener('submit', submit('REQ'))
+    template.querySelector('.help_request').addEventListener('submit', submit('HLP'))
+    template.querySelector('.submit_tags').addEventListener('submit', submit('TAG'))
+
+    return template
+}
+
+function feedback(tale, state, routeTree, userAgent) {
+    feedbackForm ??= buildFeedback(routeTree).firstChild
+    
+    feedbackForm.querySelector('.debug_info').textContent = gatherDebugInfo(tale, state, userAgent)
+    feedbackForm.querySelector('.tag_changes').textContent = gatherTagChanges(routeTree)
+    
+    return feedbackForm
+}
+
+function feedbackPreview(subject, body, form) {
+    const template = cloneTemplate('feedback_preview_template')
+    
+    template.querySelector('.subject').textContent = subject
+    template.querySelector('.body').textContent = body
+    
+    const close = e => {
+        if (e.target == e.currentTarget) e.target.dispatchEvent(ModalOverlay.closeRequest)
+    }
+    template.querySelector('modal-overlay').addEventListener('click', close)
+    template.querySelector('.cancel').addEventListener('click', close)
+    
+    template.querySelector('.submit').addEventListener('click', e => {
+        fetch(PUBLIC_KEY_URL)
+            .then(res => {
+                if (!res.ok) throw new Error(`failed to fetch encryption key: Status ${res.status}`)
+                return res.text()
+            })
+            .then(key => encryptMessage(key, body))
+            .then(encryptedBody => sendFormspree(subject, encryptedBody))
+            .then(_ => {
+                form.reset()
+                e.target.dispatchEvent(ModalOverlay.closeRequest)
+                document.body.append(toast("feedback sent successfully ^_^"))
+            })
+            .catch(msg => alert(`something went wrong:\n${msg}`))
+    })
+    
+    return template
+}
+
     
     return template
 }
@@ -179,6 +254,38 @@ function gatherTags(title, routeTree, recursive = false) {
         // arrayUnique([...(node.tags ?? []), ...node.children.flatMap(child => gatherTags(child, routeTree, true))])
 }
 
+async function sendFormspree(subject, body) {
+    const data = new FormData()
+    data.append('subject', subject)
+    data.append('body', body)
+    
+    const response = await fetch(atob(OBFUSCATED_FORMSPREE_ENDPOINT), {
+        method: 'POST',
+        body: data,
+        headers: {
+            'Accept': 'application/json'
+        }
+    })
+    if (!response.ok) {
+        const errMsg = "There was a problem while trying to send your feedback. Please try again in a moment."
+        const data = await response.json()
+        if (Object.hasOwn(data, 'errors')) {
+            throw new Error(errMsg + data["errors"].map(error => error["message"]).join(", "))
+        } else {
+            throw new Error(errMsg)
+        }
+    }
+}
+
+function gatherDebugInfo(tale, state, userAgent) {
+    return JSON.stringify({
+        userAgent: navigator.userAgent,
+        deviousVersion: tale.title,
+        currentPassage: state.history[0].passage.title,
+        // TODO version of Devious Digitizer
+        // TODO version of tags
+    }, null, 2)
+}
 
 function gatherTagChanges(routeTree) {
     return JSON.stringify(
