@@ -86,12 +86,15 @@ export class TabGroup extends HTMLElement {
         this.attachShadow({mode: 'open'})
         this.shadowRoot.append(
             el('style', null, `
-                #tabgroup {display: flex; flex-flow: var(--tabs-position, column) nowrap; gap: var(--tablist-gap, 0);}
-                #tablist {display: flex; flex-flow: var(--tabs-flow, row wrap); margin: 0; padding: 0; gap: var(--tabs-gap, .5em);}
+                #tabgroup { display: flex; flex-flow: var(--tabs-position, column) nowrap; gap: var(--tablist-gap, 0); }
+                #tablist { display: flex; flex-flow: var(--tabs-flow, row wrap); align-items: var(--tab-align); margin: 0;
+                    padding: 0; gap: var(--tabs-gap, .5em); }
                 .tab { display: block; background: var(--tab-background); cursor: var(--tab-cursor); padding: var(--tab-padding);
-                    border-style: var(--tab-border-style); border-color: var(--tab-border-color); border-width: var(--tab-border-width);
-                    border-radius: var(--tab-border-radius); }
-                .tab.active { background: var(--tab-active-background); }`
+                    border: var(--tab-border); border-style: var(--tab-border-style); border-color: var(--tab-border-color);
+                    border-width: var(--tab-border-width); border-radius: var(--tab-border-radius); }
+                .tab.active { background: var(--tab-active-background); border: var(--tab-active-border);
+                    border-style: var(--tab-active-border-style); border-color: var(--tab-active-border-color);
+                    border-width: var(--tab-active-border-width); border-radius: var(--tab-active-border-radius); }`
             ),
             el('div', {part: 'tabgroup', role: 'wrapper', id: 'tabgroup'}, [
                 el('slot'),
@@ -190,8 +193,7 @@ export class DialogPrompt extends HTMLElement {
             el('style', null, `
                 #dialog {
                     background-color: var(--dialog-color, grey); padding: var(--dialog-padding, 2em);
-                    max-width: 40em; border: var(--dialog-border);
-                    border-radius: var(--dialog-border-radius);
+                    border: var(--dialog-border); border-radius: var(--dialog-border-radius);
                 }
 
                 #buttons {

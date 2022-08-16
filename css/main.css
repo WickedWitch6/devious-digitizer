@@ -511,6 +511,7 @@
         --dialog-color: var(--primary-color);
         --dialog-border: 1px solid var(--primary-dim);
         --dialog-border-radius: .5em;
+        color: white;
     }
 
     .dialog__button--suggested {
