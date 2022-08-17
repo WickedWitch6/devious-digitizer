@@ -6,7 +6,7 @@ import { err, zip, equal, arrayUnique, filterObjectByKey, substituteText, Tree, 
           cloneTemplateFrom, parseDoc, exportObject, encryptMessage } from './utilities.js'
 
 const OBFUSCATED_FORMSPREE_ENDPOINT = "aHR0cHM6Ly9mb3Jtc3ByZWUuaW8vZi9tYmp3cGRwdw=="
-const PUBLIC_KEY_URL = '/data/pubkey.asc'
+const PUBLIC_KEY_URL = './data/pubkey.asc'
 
 const cloneTemplate = cloneTemplateFrom(document)
 
