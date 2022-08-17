@@ -1,5 +1,5 @@
 import { saveAs } from 'file-saver'
-import { readKey, encrypt, createMessage } from 'openpgp'
+//import { readKey, encrypt, createMessage } from 'openpgp'
 
 export const equal = (x, y) => x === y
 
@@ -147,6 +147,7 @@ export function exportObject(obj, filename) {
 }
 
 export async function encryptMessage(armoredPublicKey, text) {
+    const { readKey, encrypt, createMessage } = await import('openpgp')
     return await encrypt({
         message: await createMessage({text}),
         encryptionKeys: await readKey({armoredKey: armoredPublicKey})
