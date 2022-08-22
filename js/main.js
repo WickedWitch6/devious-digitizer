@@ -444,7 +444,7 @@ function annotateLinksWithTheirTarget(title, tale, passageBody) {
     const linkTargets = getLinks(tale.get(title).text).map(({target}) => target)
     const links = Array.from(passageBody.querySelectorAll('a'))
 
-    for (([link, target]) of take(100, zip([links, linkTargets]))) {
+    for (const [link, target] of take(100, zip([links, linkTargets]))) {
         link.setAttribute('data-target', target)
     }
 }

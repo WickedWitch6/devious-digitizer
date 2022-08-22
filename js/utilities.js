@@ -16,7 +16,7 @@ export const flow = (...fns) => x => fns.reduce((acc, fn) => fn(acc), x)
 export const zip = rows => rows[0].map( (_,c) => rows.map( row => row[c] ))
 
 export function* take(n, iter) {
-    for (x of iter) {
+    for (const x of iter) {
         if (n < 1) break;
         yield x;
         n -= 1;
