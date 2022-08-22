@@ -2,7 +2,7 @@ import { nanoid } from 'nanoid'
 const createGraph = require('ngraph.graph')
 import { ClosingDetails, TabPanel, TabGroup, TagList, ModalOverlay, DialogPrompt, Toast,
           } from './components.js'
-import { err, zip, equal, arrayUnique, filterObjectByKey, substituteText, Tree, bfsTree,
+import { err, zip, equal, take, arrayUnique, filterObjectByKey, substituteText, Tree, bfsTree,
           cloneTemplateFrom, parseDoc, exportObject, encryptMessage } from './utilities.js'
 
 const OBFUSCATED_FORMSPREE_ENDPOINT = "aHR0cHM6Ly9mb3Jtc3ByZWUuaW8vZi9tYmp3cGRwdw=="
@@ -444,12 +444,14 @@ function annotateLinksWithTheirTarget(title, tale, passageBody) {
     const linkTargets = getLinks(tale.get(title).text).map(({target}) => target)
     const links = Array.from(passageBody.querySelectorAll('a'))
 
-    zip([links, linkTargets]).forEach(([link, target]) => link.setAttribute('data-target', target))
+    for (([link, target]) of take(100, zip([links, linkTargets]))) {
+        link.setAttribute('data-target', target)
+    }
 }
 
 function addLinkTagLists(passageBody, routeTree) {
     passageBody
-        .querySelectorAll('a')
+        .querySelectorAll('a[data-target]')
         .forEach((link) => {
             const title = link.getAttribute('data-target') // NOTE depends on annotateLinksWithTheirTarget
             // if target passage exists
