@@ -17,7 +17,7 @@
   },
   "browserslist": "since 2016",
   "devDependencies": {
-    "parcel": "2.5.0",
+    "parcel": "^2.7.0",
     "parcel-reporter-static-files-copy": "^1.4.0",
     "push-dir": "^0.4.1",
     "rimraf": "^3.0.2"
