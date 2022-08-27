@@ -5,8 +5,8 @@ import { ClosingDetails, TabPanel, TabGroup, TagList, ModalOverlay, DialogPrompt
 import { err, zip, equal, take, arrayUnique, filterObjectByKey, substituteText, Tree, bfsTree,
           cloneTemplateFrom, parseDoc, exportObject, encryptMessage } from './utilities.js'
 
+import PUBLIC_KEY from 'bundle-text:../data/pubkey.asc'
 const OBFUSCATED_FORMSPREE_ENDPOINT = "aHR0cHM6Ly9mb3Jtc3ByZWUuaW8vZi9tYmp3cGRwdw=="
-const PUBLIC_KEY_URL = './data/pubkey.asc'
 
 const cloneTemplate = cloneTemplateFrom(document)
 
@@ -180,12 +180,7 @@ function feedbackPreview(subject, body, form) {
     template.querySelector('.cancel').addEventListener('click', close)
     
     template.querySelector('.submit').addEventListener('click', e => {
-        fetch(PUBLIC_KEY_URL)
-            .then(res => {
-                if (!res.ok) throw new Error(`failed to fetch encryption key: Status ${res.status}`)
-                return res.text()
-            })
-            .then(key => encryptMessage(key, body))
+        encryptMessage(PUBLIC_KEY, body)
             .then(encryptedBody => sendFormspree(subject, encryptedBody))
             .then(_ => {
                 form.reset()

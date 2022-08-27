@@ -17,6 +17,7 @@
   },
   "browserslist": "since 2016",
   "devDependencies": {
+    "@parcel/transformer-inline-string": "2.7.0",
     "parcel": "^2.7.0",
     "parcel-reporter-static-files-copy": "^1.4.0",
     "push-dir": "^0.4.1",
