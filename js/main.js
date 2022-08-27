@@ -18,6 +18,19 @@ customElements.define('modal-overlay', ModalOverlay)
 customElements.define('dialog-prompt', DialogPrompt)
 customElements.define('toast-box', Toast)
 
+//document.getElementById('landing_settings_link').addEventListener(
+//    'click',
+//    _ => document.body.append(settings(state.history[0].passage.title, routeTree))
+//)
+document.getElementById('landing_feedback_link').addEventListener(
+    'click',
+    _ => document.body.append(feedback(null, null, null, navigator.userAgent))
+)
+document.getElementById('landing_privacy_link').addEventListener(
+    'click',
+    _ => document.body.append(privacy())
+)
+
 document.getElementById('file_select').addEventListener('change', e => switchToStory(e.target.files[0]))
 
 const dragDropOverlay = document.getElementById('drag_drop_overlay')
@@ -162,7 +175,10 @@ function feedback(tale, state, routeTree, userAgent) {
     feedbackForm ??= buildFeedback(routeTree).firstChild
     
     feedbackForm.querySelector('.debug_info').textContent = gatherDebugInfo(tale, state, userAgent)
-    feedbackForm.querySelector('.tag_changes').textContent = gatherTagChanges(routeTree)
+    
+    if (routeTree !== null) {
+        feedbackForm.querySelector('.tag_changes').textContent = gatherTagChanges(routeTree)
+    }
     
     return feedbackForm
 }
@@ -287,9 +303,9 @@ async function sendFormspree(subject, body) {
 
 function gatherDebugInfo(tale, state, userAgent) {
     return JSON.stringify({
-        userAgent: navigator.userAgent,
-        deviousVersion: tale.title,
-        currentPassage: state.history[0].passage.title,
+        userAgent,
+        deviousVersion: tale?.title,
+        currentPassage: state ? state.history[0].passage.title : null,
         // TODO version of Devious Digitizer
         // TODO version of tags
     }, null, 2)

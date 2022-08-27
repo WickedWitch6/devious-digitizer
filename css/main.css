@@ -301,6 +301,28 @@
     .subtitle {
         margin-bottom: 1em;
     }
+    
+    .landing_menu__list {
+        display: flex;
+        flex-flow: row wrap;
+        align-items: center;
+        justify-content: center;
+        column-gap: 2em;
+        row-gap: 1em;
+    }
+    
+    .landing_menu__link {
+        list-style: none;
+        position: relative;
+        cursor: pointer;
+    }
+    
+    .landing_menu__link + .landing_menu__link::before {
+        content: "|";
+        position: absolute;
+        left: -1em;
+        transform: translateX(-50%);
+    }
 
     .standout-box {
         display: flex;
