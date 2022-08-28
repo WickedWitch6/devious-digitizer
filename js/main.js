@@ -133,7 +133,7 @@ function settings(curr, routeTree) {
 
 // Caches form to make filled-in info persistent
 let feedbackForm
-function buildFeedback(routeTree) {
+function buildFeedback() {
     const template = cloneTemplate('feedback_template')
 
     const close = e => {
@@ -172,7 +172,7 @@ function buildFeedback(routeTree) {
 }
 
 function feedback(tale, state, routeTree, userAgent) {
-    feedbackForm ??= buildFeedback(routeTree).firstChild
+    feedbackForm ??= buildFeedback().firstChild
     
     feedbackForm.querySelector('.debug_info').textContent = gatherDebugInfo(tale, state, userAgent)
     
@@ -476,7 +476,7 @@ function addLinkTagLists(passageBody, routeTree) {
 }
 
 function extractMetadata(routeTree) {
-    const include = new Set(['tags'])
+    const include = new Set(['tags', 'modifiedTags'])
     const strip = value => filterObjectByKey(value, key => include.has(key))
 
     return routeTree.toObject(([key, value]) => [key, strip(value)])
