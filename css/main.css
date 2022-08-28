@@ -521,6 +521,13 @@
         --toast-border-radius: .5rem;
     }
 
+    /* Overlays */
+    /************/
+    
+    modal-overlay {
+        --overlay-display: unset;
+    }
+
     /* Dialogs */
     /***********/
 
@@ -529,6 +536,15 @@
         --dialog-border: 1px solid var(--primary-dim);
         --dialog-border-radius: .5em;
         color: white;
+        
+        width: 95%;
+        max-width: var(--max-width);
+        font-size: 12px;
+        margin: auto;
+    }
+    
+    dialog-prompt a {
+        color: var(--secondary-highlight);
     }
 
     .dialog__button--suggested {
@@ -544,7 +560,10 @@
         flex-flow: column nowrap;
 
         background-color: var(--primary-color);
-        max-width: var(--max-width);
+    }
+    
+    .settings__dialog {
+        max-width: 50rem;
     }
 
     .settings__set {
@@ -580,12 +599,10 @@
     .feedback {
         background-color: var(--primary-color);
         padding: .5rem;
-        max-width: var(--max-width);
     }
     
     .feedback__dialog {
         --dialog-padding: .5rem;
-        width: 95%;
         max-width: 35rem;
     }
     
@@ -658,7 +675,6 @@
     .feedback_preview {
         background-color: var(--primary-color);
         padding: .5rem;
-        max-width: var(--max-width);
     }
     
     .feedback_preview__dialog {
@@ -673,6 +689,13 @@
         height: auto;
         max-height: 30rem;
         overflow-y: auto;
+    }
+    
+    /* Privacy Dialog */
+    /******************/
+    
+    .privacy__dialog {
+        max-width: 50rem;
     }
 
 /*********************/

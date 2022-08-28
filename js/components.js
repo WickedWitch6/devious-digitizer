@@ -162,7 +162,7 @@ export class ModalOverlay extends HTMLElement {
         this.shadowRoot.append(
             el('style', null, `
                 #overlay {
-                    display: flex; flex-flow: column nowrap; justify-content: center;
+                    display: var(--overlay-display, flex); flex-flow: column nowrap; justify-content: safe center;
                     align-items: center;
 
                     position: fixed; z-index: 1; left: 0; top: 0; width: 100%; height: 100%;
