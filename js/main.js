@@ -7,6 +7,7 @@ import { err, zip, equal, take, arrayUnique, filterObjectByKey, substituteText, 
 
 import PUBLIC_KEY from 'bundle-text:../data/pubkey.asc'
 const OBFUSCATED_FORMSPREE_ENDPOINT = "aHR0cHM6Ly9mb3Jtc3ByZWUuaW8vZi9tYmp3cGRwdw=="
+const DATA_URL = "https://devious-digitizer-data.netlify.app/"
 
 const cloneTemplate = cloneTemplateFrom(document)
 
@@ -361,11 +362,11 @@ async function injectDigitizerFeatures () {
     // determine whether this is DW or DM by checking which character starts are present
     const DWChars = ['allstarstart', 'youngpunkstart', 'quietonestart', 'runawaystart', 'GwynStart', 'BuddyStart', 'AustinStart', 'DavidStart', 'JackStart', 'MikeStart', 'ThaddeusStart', 'SweetKidStart', 'MeanGirlStart', 'GirlGamerStart', 'SelfSufficientStart', 'CallistaStart', 'BritStart', 'WilmaStart', 'HollyStart', 'CelesteStart', 'HelenStart', 'MareiStart', 'IreneStart']
     const DMChars = ['CaliburnStart', 'DefianceStart', 'EdithStart', 'FionaStart', 'IrethStart', 'KaiStart', 'KiaraStart', 'KonkoStart', 'LeoStart', 'MaxiaStart', 'NicholasStart', 'SimoneStart', 'SiphaStart', 'ValerieStart', 'YamiStart']
-    const metadataPath = DWChars.some(tale.has, tale) ? 'data/DW_metadata.json' :
-                         DMChars.some(tale.has, tale) ? 'data/DM_metadata.json' :
+    const metadataName = DWChars.some(tale.has, tale) ? 'DW_metadata.json' :
+                         DMChars.some(tale.has, tale) ? 'DM_metadata.json' :
                                                     err('Story is neither Worldly nor Mundane')
     // fetch the relevant metadata file from the server
-    const metadata = await fetch(metadataPath).then(res => res.json())
+    const metadata = await fetch(DATA_URL + metadataName).then(res => res.json())
 
     // build a graph from passages' links
     const passageGraph = buildPassageGraph(store)
