@@ -5,7 +5,7 @@ import { ClosingDetails, TabPanel, TabGroup, TagList, ModalOverlay, DialogPrompt
 import { err, zip, equal, take, arrayUnique, filterObjectByKey, substituteText, Tree, bfsTree,
           cloneTemplateFrom, parseDoc, exportObject, encryptMessage } from './utilities.js'
 
-import PUBLIC_KEY from 'bundle-text:../data/pubkey.asc'
+import PUBLIC_KEY from 'bundle-text:../pubkey.asc'
 const OBFUSCATED_FORMSPREE_ENDPOINT = "aHR0cHM6Ly9mb3Jtc3ByZWUuaW8vZi9tYmp3cGRwdw=="
 const DATA_URL = "https://devious-digitizer-data.netlify.app/"
 
