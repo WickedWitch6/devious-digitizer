@@ -330,7 +330,7 @@ async function switchToStory(file) {
     const storyDoc = parseDoc(storyText)
 
     // is document one of DW or DM?
-    if (!storyDoc.querySelector('#storeArea > [tiddler = "CharGenMain"]')) {
+    if (!storyDoc.querySelector('#storeArea > [tiddler = "CharGenMain"]') || !storyDoc.querySelector('#storeArea > [tiddler = "Start"]')) {
         const confirmContinue = await askToConfirm(file.name)
         if (!confirmContinue) return;
     }
