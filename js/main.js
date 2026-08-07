@@ -346,6 +346,8 @@ function loadDocIntoDom(doc) {
     document.head.insertAdjacentHTML("beforeend", doc.head.innerHTML)
     document.body.insertAdjacentHTML("beforeend", doc.body.innerHTML)
 
+    // Defining tiddlerTitle globally circumvents an error in Twine's scripts caused by strict mode
+    globalThis.tiddlerTitle = ''
     document.head.querySelectorAll('script[title]').forEach(s => eval(s.text))
     dispatchEvent(new Event('load'))
 }
