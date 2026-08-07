@@ -307,7 +307,6 @@ function gatherDebugInfo(tale, state, userAgent) {
         userAgent,
         deviousVersion: tale?.title,
         currentPassage: state ? state.history[0].passage.title : null,
-        // TODO version of Devious Digitizer
         // TODO version of tags
     }, null, 2)
 }
@@ -325,7 +324,6 @@ function gatherTagChanges(routeTree) {
 }
 
 async function switchToStory(file) {
-    // TODO? clear previous twine elements to allow for loading more than one story
     const storyText = await file.text()
     const storyDoc = parseDoc(storyText)
 
@@ -348,8 +346,7 @@ function loadDocIntoDom(doc) {
     document.head.insertAdjacentHTML("beforeend", doc.head.innerHTML)
     document.body.insertAdjacentHTML("beforeend", doc.body.innerHTML)
 
-    // prevent engine script from running multiple times?
-    document.head.querySelectorAll('script').forEach(s => eval(s.text))
+    document.head.querySelectorAll('script[title]').forEach(s => eval(s.text))
     dispatchEvent(new Event('load'))
 }
 
@@ -430,7 +427,6 @@ async function injectDigitizerFeatures () {
 const getLinks = body =>
     Array.from(body.matchAll(/\[\[(?:([^|]+)\|)?([^\]]+)\]\]/g)).map(([_, text,  target]) => ({ text, target }))
 
-// TODO? rewrite using tale instead of storeArea
 function buildPassageGraph(storeArea) {
     const g = createGraph()
 
