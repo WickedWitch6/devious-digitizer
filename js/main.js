@@ -347,7 +347,7 @@ function loadDocIntoDom(doc) {
     document.head.insertAdjacentHTML("beforeend", doc.head.innerHTML)
     document.body.insertAdjacentHTML("beforeend", doc.body.innerHTML)
 
-    // Defining tiddlerTitle globally circumvents an error in Twine's scripts caused by strict mode
+    // Defining tiddlerTitle globally circumvents strict mode breaking Twine's scripts
     globalThis.tiddlerTitle = ''
     document.head.querySelectorAll('script[title]').forEach(s => eval(s.text))
     dispatchEvent(new Event('load'))
@@ -378,7 +378,7 @@ async function injectDigitizerFeatures () {
             (child, link) => addChild(child.id, Object.assign({link: link.data}, child.data)),
             true // only traverse outbound links
         ),
-        'CharGenMain'
+        'Start'
     )
     // decorate routeTree with tags and other metadata
     routeTree.forEach((value, key) => routeTree.set(key, Object.assign(value, metadata[key])))
