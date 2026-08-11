@@ -378,7 +378,7 @@ async function injectDigitizerFeatures () {
             (child, link) => addChild(child.id, Object.assign({link: link.data}, child.data)),
             true // only traverse outbound links
         ),
-        'Start'
+        'CharGenMain'
     )
     // decorate routeTree with tags and other metadata
     routeTree.forEach((value, key) => routeTree.set(key, Object.assign(value, metadata[key])))
