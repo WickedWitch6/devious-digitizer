@@ -448,7 +448,7 @@
     }
 
     .tag_viewer--inline {
-        display: inline;
+        display: inline-block;
     }
 
     .tag_viewer--inline > :not(summary) {
