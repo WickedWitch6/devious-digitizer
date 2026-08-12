@@ -375,10 +375,12 @@ async function injectDigitizerFeatures () {
     const routeTree = Tree.fromGraphBfs(
         (addChild, currentChild) => passageGraph.forEachLinkedNode(
             currentChild,
-            (child, link) => addChild(child.id, Object.assign({link: link.data}, child.data)),
+            // add to tree and frontier unless, child is 'Version History', which breaks the tree. This is a big hack.
+            (child, link) => child.id !== 'Version History' ?
+                addChild(child.id, Object.assign({link: link.data}, child.data)) : undefined,
             true // only traverse outbound links
         ),
-        'CharGenMain'
+        'Start'
     )
     // decorate routeTree with tags and other metadata
     routeTree.forEach((value, key) => routeTree.set(key, Object.assign(value, metadata[key])))
